@@ -1,0 +1,27 @@
+# Third-party notices
+
+The MIT licence in [LICENSE](LICENSE) covers the code, shaders, tools and documentation written for this
+project. The following parts come from others and keep their own licences.
+
+## Included in this repository
+
+| What | Where | Licence |
+|---|---|---|
+| **Microsoft Rocketbox Avatar Library** – 10 adult avatars and run / idle / clap / cheer / wave animations (textures downscaled, specular maps dropped) | `Assets/Rocketbox/` | MIT, © Microsoft Corporation – see [`Assets/Rocketbox/LICENSE.txt`](Assets/Rocketbox/LICENSE.txt) and <https://github.com/microsoft/Microsoft-Rocketbox> |
+| **Poly Haven** models and textures (tree stumps, logs, ferns, nettles, bench, lamp, …; asphalt, gravel, forest floor, bark, planks, …), 1k resolution | `Assets/PhotoReal/Wayside/` | CC0 1.0 (public domain) – <https://polyhaven.com> |
+
+## Not included – get them yourself
+
+These come from the Unity Asset Store. Their licence (the Asset Store EULA) doesn't allow redistributing
+them, so they are **not** in this repository. See [docs/Setup.md](docs/Setup.md) for how to add them.
+
+| What | Where it goes | Source |
+|---|---|---|
+| **MapMagic 2** (v2.1.20, by Denis Pahunov) – the infinite terrain generator | `Assets/MapMagic/` | Unity Asset Store, product 165180 |
+| **Idyllic Fantasy Nature** (trees, bushes, plants, rocks, terrain layers) – comes with the MapMagic 2 package | `Assets/Idyllic Fantasy Nature/` | Unity Asset Store (with MapMagic 2) |
+
+The project also uses Unity packages (Universal Render Pipeline, Input System, …) that Unity resolves
+from `Packages/manifest.json` under the Unity Companion License.
+
+No affiliation with Sportstech, FitShow, Unity, Microsoft, Poly Haven or the MapMagic author. Product
+names are used only to describe compatibility.

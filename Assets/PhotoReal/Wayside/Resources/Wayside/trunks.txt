@@ -1,0 +1,4 @@
+PineMed1 = 0.217
+PineMed2 = 0.329
+PineSmall1 = 0.299
+PineSmall2 = 0.419

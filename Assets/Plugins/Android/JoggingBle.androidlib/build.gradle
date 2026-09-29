@@ -1,0 +1,8 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'local.jogging.blepermissions'
+    compileSdk 35
+    defaultConfig { minSdk 26 }
+    sourceSets { main { manifest.srcFile 'AndroidManifest.xml' } } // the manifest lies next to this file
+}

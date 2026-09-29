@@ -1,0 +1,50 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+!/[Aa]ssets/**/*.meta
+
+# IDE / OS
+.vs/
+.idea/
+.vscode/
+*.csproj
+*.sln
+*.user
+.DS_Store
+
+# Build outputs
+*.apk
+*.aab
+*.app
+*.ipa
+*.unitypackage
+
+# Crashlytics / Addressables local
+crashlytics-build.properties
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+# Serena MCP tool cache
+.serena/
+
+# Player builds
+/Builds/
+
+# Android build temp
+/.utmp/
+
+# Asset Store packages – import them yourself (docs/Setup.md); their licence doesn't allow sharing
+/[Aa]ssets/MapMagic/
+/[Aa]ssets/MapMagic.meta
+/[Aa]ssets/Idyllic Fantasy Nature/
+/[Aa]ssets/Idyllic Fantasy Nature.meta
+# seasonal tree textures, recoloured from the Asset Store trees by the build (Editor/SeasonBuilder)
+/[Aa]ssets/PhotoReal/Seasons/*.png
+/[Aa]ssets/PhotoReal/Seasons/*.png.meta

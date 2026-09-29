@@ -1,0 +1,3 @@
+Modelle und Texturen in diesem Ordner: Poly Haven (https://polyhaven.com), Lizenz CC0 1.0 –
+gemeinfrei, frei nutzbar ohne Namensnennung. Heruntergeladen am 28.09.2026 (1k-Auflösung).
+Aufbereitet mit Editor/WaysideAssets.cs (Menü Jogging → Build → Wegrand-Assets aufbereiten).
