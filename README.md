@@ -124,6 +124,12 @@ flowchart LR
 No treadmill? Run with the keyboard (↑/↓), the on-screen − / + buttons, or the built-in treadmill
 simulator (`-beltsim`).
 
+## Try it
+
+Ready-made apps for **macOS** and **Android tablets** are on the
+[Releases page](https://github.com/hkiam/jogging/releases/latest) – no Unity needed. No treadmill? Use the
+arrow keys or the on-screen − / + buttons.
+
 ## Getting started
 
 The code, shaders, tools and the included models are all here. **Two packages from the Unity Asset
