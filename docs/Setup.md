@@ -15,40 +15,58 @@ how to add them and which small changes the app needs in MapMagic.
 
 ## 2. Add the Asset Store packages
 
-1. Open the Unity Asset Store (in the browser or Unity's *Package Manager → My Assets*) and add
-   **MapMagic 2** (by Denis Pahunov, free) to your account.
-2. Open this project in Unity 6000.3.24f1. It will report missing scripts and compile errors – that's
-   expected until step 3 is done.
-3. *Package Manager → My Assets → MapMagic 2 → Download / Import*. Import everything, including the
-   **Idyllic Fantasy Nature** folder that comes with it. The folders must end up as
-   `Assets/MapMagic/` and `Assets/Idyllic Fantasy Nature/`. The project was built with **MapMagic
-   2.1.20**; a different version may need adjustments.
+Two packages from the Unity Asset Store, both added to your account in the browser or in Unity's
+*Package Manager → My Assets*:
 
-The scene keeps its references to MapMagic and the nature assets by their GUIDs, so once the package is
-imported unchanged, trees, rocks, terrain layers and the terrain graph connect by themselves. The seasonal
-tree textures (spring, autumn, winter) are recoloured from these trees by the first build
+| Package | Publisher | Folder it creates | Used for |
+|---|---|---|---|
+| [**MapMagic 2**](https://assetstore.unity.com/packages/tools/terrain/mapmagic-2-165180) (built with 2.1.19/2.1.20) | Denis Pahunov | `Assets/MapMagic/` | the endless terrain, its graph, birch/pine/stone models |
+| [**Idyllic Fantasy Nature**](https://assetstore.unity.com/packages/3d/environments/fantasy/idyllic-fantasy-nature-260042) (1.0) | Edenity | `Assets/Idyllic Fantasy Nature/` | trees, bushes, plants, rocks, terrain layers |
+
+The project doesn't compile until MapMagic is in it, so the import needs one extra click:
+
+1. Open the project in Unity 6000.3.24f1. It reports compile errors and offers **Safe Mode** – choose
+   **Ignore**.
+2. *Package Manager → My Assets* → **MapMagic 2** → *Download* → *Import* (everything), then the same for
+   **Idyllic Fantasy Nature**. Once MapMagic is in, the errors are gone.
+
+Or, without opening Unity (Unity's batch mode refuses to import into a project with compile errors): download
+both packages once in the Package Manager, then unpack them straight from Unity's download cache:
+
+```bash
+Tools/unpack-unitypackage.py ~/Library/Unity/Asset\ Store-5.x/Denis\ Pahunov/Editor\ ExtensionsTerrain/MapMagic\ 2.unitypackage
+```
+
+```bash
+Tools/unpack-unitypackage.py ~/Library/Unity/Asset\ Store-5.x/Edenity/3D\ ModelsEnvironmentsFantasy/Idyllic\ Fantasy\ Nature.unitypackage
+```
+
+The scene refers to MapMagic and the nature assets by their GUIDs, so once the packages are imported
+unchanged, trees, rocks, terrain layers and the terrain graph connect by themselves. The seasonal tree
+textures (spring, autumn, winter) are recoloured from these trees by the first build
 (`Editor/SeasonBuilder`), so they aren't in the repository either.
 
-## 3. Apply the changes to MapMagic
+**That's all you need** – the app builds and runs with the unmodified packages (checked: the full
+end-to-end test passes, 111 of 111). In the log it says once *"MapMagic ohne die Anpassungen der App"*.
 
-The app needs a few changes inside MapMagic. Their code belongs to MapMagic, so it isn't shared here; the
-list below says what each one does, so you can make it yourself. In the original project each change is
-marked with a `// Jogging` comment.
+## 3. Optional: the app's changes inside MapMagic
 
-| File (in `Assets/MapMagic/`) | Change | Needed for |
+The original project runs MapMagic with a few changes that make it faster and smoother, especially on
+tablets. Their code belongs to MapMagic, so it isn't shared here; the list below says what each one does,
+so you can make it yourself. The app finds them at runtime (`World/MapMagicExt.cs`) and uses them when they
+are there. In the original project each change is marked with a `// Jogging` comment.
+
+| File (in `Assets/MapMagic/`) | Change | Effect |
 |---|---|---|
-| `Core/MapMagicObject.cs` | `StopGenerate()` made **public**; spare tiles get the same terrain settings as the grid; a new MapMagic starts with spare-tile prewarming off (`Den.Tools.TileDiag.PrewarmAllowed = false`) | **compiles** (`SceneReload` calls `StopGenerate`), memory on tablets |
-| `Tools/TileManager.cs` | a small static class `Den.Tools.TileDiag` (per-frame main-thread time, `PrewarmAllowed` flag); spare tiles are built ahead in quiet frames instead of all at once when the grid moves | **compiles**, no hitch at tile borders |
+| `Tools/TileManager.cs` | a small static class `Den.Tools.TileDiag` (per-frame timing of the tile grid, a `PrewarmAllowed` flag); spare tiles are built ahead in quiet frames instead of all at once when the grid moves | no hitch at tile borders |
+| `Core/MapMagicObject.cs` | spare tiles get the same terrain settings as the grid; a new MapMagic starts with prewarming off until the app allows it | memory on tablets |
 | `Terrains/TerrainTileManager.cs` | a spare tile stays hidden until it is deployed | no flicker |
 | `Terrains/TerrainTile.cs` | new tiles start with a small base map/heightmap until attached; a destroyed tile stops its tasks through the stop token (no `Thread.Abort`); timing hooks for `-hitch` | memory, stable scene reloads under IL2CPP |
-| `Tools/ThreadManager/ThreadManager.cs` | a fixed pool of lower-priority worker threads instead of a thread per task; `ClearQueue()` drops queued work | **compiles** (`RouteRuntime` calls `ClearQueue`), smooth frame rate |
-| `Tools/ThreadManager/CoroutineManager.cs` | timing of the main-thread queue for `-hitch` | diagnostics |
-| `Tools/Erosion.cs` | allocation-free versions of the managed erosion fallback (used under IL2CPP), bit-identical results (`ErosionCheck`) | ~5× faster terrain on devices |
-| `Generators/Matrix/Runtime/HeightOut.cs` | a `Pedestal` (metres of ground below the graph's zero) added to every height | the trail's elevation profile can dig into the land |
-| `Nodes/Generator.cs`, `Nodes/Graph.cs` | node timing always recorded (not serialized); `-diag` logs the slowest nodes | diagnostics |
-
-If you only want to get it running: the entries marked **compiles** are needed for the project to build;
-the rest improve performance and stability.
+| `Tools/ThreadManager/ThreadManager.cs` | a fixed pool of lower-priority worker threads instead of a thread per task; a static `ClearQueue()` drops queued work | smooth frame rate, clean scene changes |
+| `Tools/ThreadManager/CoroutineManager.cs` | static `FrameMs`, `SlowestStepMs`, `SlowestStep`: main-thread time of the queue per frame | `-hitch` diagnostics |
+| `Tools/Erosion.cs` | allocation-free versions of the managed erosion fallback (used under IL2CPP), bit-identical results, and a static `UseReference` switch to compare (`ErosionCheck`) | ~5× faster terrain on devices |
+| `Generators/Matrix/Runtime/HeightOut.cs` | a `Pedestal` (metres of ground below the graph's zero) added to every height | deep cuts and lake basins along the trail keep their depth |
+| `Nodes/Generator.cs`, `Nodes/Graph.cs` | node timing always recorded in a `mainTime` field (not serialized); `-diag` logs the slowest nodes | diagnostics |
 
 ## 4. Build and run
 

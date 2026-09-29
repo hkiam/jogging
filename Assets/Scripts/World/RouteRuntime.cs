@@ -74,7 +74,7 @@ namespace Jogging.World
         // Queued tiles of the old scene are dropped; running ones stop on their stop tokens (each
         // TerrainTile stops its tasks in OnDestroy) — no Thread.Abort, which under IL2CPP could kill a
         // thread mid-allocation and crash the GC later. The threads are background threads (no hang on quit).
-        private void OnDestroy() => Den.Tools.Tasks.ThreadManager.ClearQueue();
+        private void OnDestroy() => MapMagicExt.ClearQueue();
 
         private static RouteDoc FromCommandLine()
         {

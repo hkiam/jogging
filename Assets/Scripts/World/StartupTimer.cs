@@ -54,7 +54,7 @@ namespace Jogging.World
                 Debug.Log($"[Startup] erste Kachel rechnet seit {now - generateAt:0.00} s (jetzt +{Time.realtimeSinceStartup - t0:0.0} s)");
                 generateAt = -2f;
             }
-            if (frames == 3) Debug.Log($"[Startup] Kachelraster aufgebaut in {Den.Tools.TileDiag.DeployMs:0} ms (Bild 2: +{Time.realtimeSinceStartup - t0:0.0} s)");
+            if (frames == 3) Debug.Log($"[Startup] Kachelraster aufgebaut in {MapMagicExt.DeployMs:0} ms (Bild 2: +{Time.realtimeSinceStartup - t0:0.0} s)");
             if (frames == 60) Debug.Log($"[Startup] 60 Bilder nach +{Time.realtimeSinceStartup - t0:0.0} s");
         }
 
@@ -64,10 +64,10 @@ namespace Jogging.World
             var mm = FindFirstObjectByType<MapMagic.Core.MapMagicObject>();
             if (mm == null || mm.graph == null) return;
             var list = new System.Collections.Generic.List<MapMagic.Nodes.Generator>(mm.graph.generators);
-            list.Sort((a, b) => b.mainTime.CompareTo(a.mainTime));
-            double total = 0; foreach (var g in list) total += g.mainTime;
+            list.Sort((a, b) => MapMagicExt.MainTime(b).CompareTo(MapMagicExt.MainTime(a)));
+            double total = 0; foreach (var g in list) total += MapMagicExt.MainTime(g);
             var sb = new System.Text.StringBuilder($"[Startup] Knoten (Detail, gesamt {total / 1000.0:0.0} s):");
-            for (int i = 0; i < Mathf.Min(8, list.Count); i++) sb.Append($" {list[i].GetType().Name} {list[i].mainTime:0} ms ·");
+            for (int i = 0; i < Mathf.Min(8, list.Count); i++) sb.Append($" {list[i].GetType().Name} {MapMagicExt.MainTime(list[i]):0} ms ·");
             Debug.Log(sb.ToString());
         }
 

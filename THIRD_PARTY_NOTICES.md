@@ -18,7 +18,7 @@ them, so they are **not** in this repository. See [docs/Setup.md](docs/Setup.md)
 | What | Where it goes | Source |
 |---|---|---|
 | **MapMagic 2** (v2.1.20, by Denis Pahunov) – the infinite terrain generator | `Assets/MapMagic/` | Unity Asset Store, product 165180 |
-| **Idyllic Fantasy Nature** (trees, bushes, plants, rocks, terrain layers) – comes with the MapMagic 2 package | `Assets/Idyllic Fantasy Nature/` | Unity Asset Store (with MapMagic 2) |
+| **Idyllic Fantasy Nature** (v1.0, by Edenity) – trees, bushes, plants, rocks, terrain layers | `Assets/Idyllic Fantasy Nature/` | Unity Asset Store, product 260042 |
 
 The project also uses Unity packages (Universal Render Pipeline, Input System, …) that Unity resolves
 from `Packages/manifest.json` under the Unity Companion License.

@@ -15,8 +15,15 @@ namespace Jogging.EditorTools
     {
         public static void RunBatch() => EditorApplication.Exit(Run() ? 0 : 1);
 
+        // the allocation-free erosion is one of the app's changes inside MapMagic (docs/Setup.md); without it
+        // there is nothing to compare
+        private static readonly System.Reflection.FieldInfo useRefField = typeof(Erosion).GetField("UseReference", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        private static readonly System.Reflection.PropertyInfo useRefProp = typeof(Erosion).GetProperty("UseReference", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        private static void UseReference(bool on) { if (useRefField != null) useRefField.SetValue(null, on); else useRefProp?.SetValue(null, on); }
+
         public static bool Run()
         {
+            if (useRefField == null && useRefProp == null) { Debug.Log("[ErosionCheck] übersprungen – MapMagic ohne die Anpassungen der App"); return true; }
             var fails = new List<string>();
             foreach (int size in new[] { 65, 161 })
                 for (int seed = 1; seed <= 3; seed++)
@@ -35,7 +42,7 @@ namespace Jogging.EditorTools
                     if (seed == 1)
                         Debug.Log($"[ErosionCheck] {size}²: Original {(t1 - t0) * 1000.0 / System.Diagnostics.Stopwatch.Frequency:0} ms, neu {(t2 - t1) * 1000.0 / System.Diagnostics.Stopwatch.Frequency:0} ms");
                 }
-            Erosion.UseReference = false;
+            UseReference(false);
             foreach (var f in fails) Debug.LogError("[ErosionCheck] FAIL " + f);
             return fails.Count == 0;
         }
@@ -43,7 +50,7 @@ namespace Jogging.EditorTools
         // The loop of MapMagic's Erosion200 (3 iterations, fluidity 3), with either implementation.
         private static void RunErosion(Matrix h, bool reference)
         {
-            Erosion.UseReference = reference;
+            UseReference(reference);
             var order = new Matrix2D<int>(h.rect);
             var torrents = new Matrix(h.rect);
             var mudflow = new Matrix(h.rect);

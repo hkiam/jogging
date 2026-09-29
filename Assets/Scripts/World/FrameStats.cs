@@ -115,8 +115,7 @@ namespace Jogging.World
             if (!hitchLog) return;
             int gc = System.GC.CollectionCount(0);
             last = $"Kachel fertig {applied} (Entwurf {appliedDraft}) · verschoben {moved} · LOD {lod} · GC {gc - gc0} · " +
-                   $"MapMagic {Den.Tools.Tasks.CoroutineManager.FrameMs:0} ms (längster Schritt {Den.Tools.Tasks.CoroutineManager.SlowestStepMs:0} ms {Den.Tools.Tasks.CoroutineManager.SlowestStep}) · Raster: Deploy {Den.Tools.TileDiag.DeployMs:0}, Dists {Den.Tools.TileDiag.DistsMs:0}, Move {Den.Tools.TileDiag.MoveMs:0}, Weld {Den.Tools.TileDiag.WeldMs:0}, StartGen {Den.Tools.TileDiag.StartGenMs:0}, LOD {Den.Tools.TileDiag.LodMs:0} [{Den.Tools.TileDiag.Sections}] · Skripte: {FrameWork.TakeFrame()}";
-            Den.Tools.TileDiag.Reset();
+                   MapMagicExt.HitchLine() + $" · Skripte: {FrameWork.TakeFrame()}";
             applied = appliedDraft = moved = lod = 0; gc0 = gc;
         }
 

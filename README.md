@@ -127,12 +127,12 @@ simulator (`-beltsim`).
 ## Getting started
 
 The code, shaders, tools and the included models are all here. **Two packages from the Unity Asset
-Store are not** – MapMagic 2 (free) and the Idyllic Fantasy Nature assets that come with it – because
-their licence doesn't allow sharing them. [docs/Setup.md](docs/Setup.md) explains how to add them and
-the small changes the app needs inside MapMagic.
+Store are not** – MapMagic 2 and Idyllic Fantasy Nature – because their licence doesn't allow sharing them.
+Add them to your Asset Store account and import them; [docs/Setup.md](docs/Setup.md) walks you through it.
+Nothing else to change: the app builds and runs with the packages as they come.
 
 1. Install **Unity 6000.3.24f1** (exactly this version) with Mac / iOS / Android build support.
-2. Import **MapMagic 2** from the Asset Store and apply the changes listed in [docs/Setup.md](docs/Setup.md).
+2. Import **MapMagic 2** and **Idyllic Fantasy Nature** from the Asset Store ([docs/Setup.md](docs/Setup.md)).
 3. Build and run:
 
 ```bash
@@ -188,6 +188,7 @@ FitShow or any treadmill maker.
 ## Credits
 
 - Terrain: [MapMagic 2](https://assetstore.unity.com/packages/tools/terrain/mapmagic-2-165180) by Denis Pahunov (Unity Asset Store, not included)
+- Trees and plants: [Idyllic Fantasy Nature](https://assetstore.unity.com/packages/3d/environments/fantasy/idyllic-fantasy-nature-260042) by Edenity (Unity Asset Store, not included)
 - Figures: [Microsoft Rocketbox Avatar Library](https://github.com/microsoft/Microsoft-Rocketbox) (MIT)
 - Wayside models and trail textures: [Poly Haven](https://polyhaven.com) (CC0)
 - Everything else – code, shaders, sky, sounds, tools – written for this project.

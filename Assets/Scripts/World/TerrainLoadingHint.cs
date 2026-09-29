@@ -13,7 +13,7 @@ namespace Jogging.World
         private bool ready;
         private GUIStyle style;
 
-        private void Awake() => Den.Tools.TileDiag.PrewarmAllowed = false; // a new scene: the start comes first
+        private void Awake() => MapMagicExt.PrewarmAllowed = false; // a new scene: the start comes first
 
         private void Update()
         {
@@ -21,7 +21,7 @@ namespace Jogging.World
                 && (TrailPath.Active == null || TrailShaper.Ready(TrailPath.Active.RunnerS - 5f, TrailPath.Active.RunnerS + 60f)))
             {
                 ready = true;
-                Den.Tools.TileDiag.PrewarmAllowed = true; // now MapMagic may build spare tiles in quiet frames
+                MapMagicExt.PrewarmAllowed = true; // now MapMagic may build spare tiles in quiet frames
                 Debug.Log($"[Jogging] Gelände bereit nach {Time.realtimeSinceStartup:0.0} s");
             }
         }

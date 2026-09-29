@@ -16,7 +16,7 @@ namespace Jogging.World
         {
             foreach (var mm in Object.FindObjectsByType<MapMagicObject>(FindObjectsSortMode.None))
             {
-                mm.StopGenerate();
+                MapMagicExt.StopGenerate(mm);
                 mm.enabled = false;
             }
             foreach (var t in Object.FindObjectsByType<Terrain>(FindObjectsInactive.Include, FindObjectsSortMode.None))
