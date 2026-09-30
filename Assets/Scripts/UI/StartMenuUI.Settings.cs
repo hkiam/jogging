@@ -57,7 +57,7 @@ namespace Jogging.UI
                     line1.text = Jogging.Core.Loc.F("Verbunden · {0}{1}", (bridge.TreadmillDeviceName != "" ? bridge.TreadmillDeviceName + " · " : ""), bridge.Protocol);
                     line2.text = Jogging.Core.Loc.F("Band {0} · Steigung {1:0} % · {2}", Jogging.Core.Units.FmtSpeed(belt.SpeedMps * 3.6f), belt.InclinePercent, BeltText(belt.State));
                 }
-                else if (!Core.Platform.HasMacBridge && !NativeBle.Available && bridge.Simulator == null) { line1.text = Jogging.Core.Loc.T("Auf diesem Gerät noch nicht verfügbar"); line2.text = Jogging.Core.Loc.T("Laufband und Pulsgurt verbinden sich vorerst über die Mac-App"); }
+                else if (!Core.Platform.HasBleBridge && !NativeBle.Available && bridge.Simulator == null) { line1.text = Jogging.Core.Loc.T("Auf diesem Gerät noch nicht verfügbar"); line2.text = Jogging.Core.Loc.T("Laufband und Pulsgurt verbinden sich vorerst über die Mac-App"); }
                 else if (bridge.Wanted) { line1.text = connected ? Jogging.Core.Loc.T("Verbunden, warte auf Daten …") : Jogging.Core.Loc.T("Suche Laufband …"); line2.text = bridge.StatusText; }
                 else { line1.text = Jogging.Core.Loc.T("Getrennt"); line2.text = Core.Platform.IsMobile ? Jogging.Core.Loc.T("Ohne Laufband stellst du das Tempo mit − / +") : Jogging.Core.Loc.T("Ohne Laufband läufst du mit ↑ / ↓"); }
                 connectLabel.text = bridge != null && bridge.Wanted ? Jogging.Core.Loc.T("Trennen") : Jogging.Core.Loc.T("Verbinden");

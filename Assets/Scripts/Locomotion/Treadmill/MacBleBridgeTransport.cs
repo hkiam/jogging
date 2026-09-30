@@ -182,7 +182,7 @@ namespace Jogging.Locomotion.Treadmill
             wanted = true;
             treadmillWantedId = deviceId ?? "";
             if (Simulator != null) { StatusText = Jogging.Core.Loc.T("Simulator F37"); Protocol = "FitShow"; TreadmillDeviceId = SimId; TreadmillDeviceName = "F37 (Simulator)"; return; }
-            if (!Core.Platform.HasMacBridge && !NativeBle.Available) { StatusText = Jogging.Core.Loc.T("Laufband auf diesem Gerät nicht verfügbar"); return; }
+            if (!Core.Platform.HasBleBridge && !NativeBle.Available) { StatusText = Jogging.Core.Loc.T("Laufband auf diesem Gerät nicht verfügbar"); return; }
             StatusText = Jogging.Core.Loc.T("Starte Bluetooth-Bridge…");
             OpenSocket();
             LaunchBridge();
@@ -204,7 +204,7 @@ namespace Jogging.Locomotion.Treadmill
         {
             hrWanted = true;
             hrWantedId = deviceId ?? "";
-            if (!Core.Platform.HasMacBridge && !NativeBle.Available) { HeartRateStatus = Jogging.Core.Loc.T("Pulsgurt auf diesem Gerät nicht verfügbar"); return; }
+            if (!Core.Platform.HasBleBridge && !NativeBle.Available) { HeartRateStatus = Jogging.Core.Loc.T("Pulsgurt auf diesem Gerät nicht verfügbar"); return; }
             if (HeartRateDeviceId != "" && hrWantedId != "" && HeartRateDeviceId != hrWantedId) { HeartRateDeviceId = ""; HeartRateDeviceName = ""; }
             HeartRateStatus = Jogging.Core.Loc.T("Suche Pulsgurt …");
             OpenSocket();
@@ -292,8 +292,40 @@ namespace Jogging.Locomotion.Treadmill
                 Core.Shell.Run("/usr/bin/open -g " + Core.Shell.Quote(path) + " >/dev/null 2>&1 &"); // (Process.Start doesn't work in IL2CPP players)
             }
             catch (Exception e) { Debug.LogWarning("[Jogging] Bridge-Start fehlgeschlagen: " + e.Message); }
+#elif UNITY_STANDALONE_WIN
+            // Windows: JoggingBleBridge.exe next to Jogging.exe (a second copy quits at once: the port is taken)
+            string exe = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.dataPath) ?? "", "JoggingBleBridge.exe");
+            if (!System.IO.File.Exists(exe))
+            {
+                StatusText = Jogging.Core.Loc.T("Bluetooth-Helfer fehlt (JoggingBleBridge.exe)");
+                Debug.LogWarning("[Jogging] BLE-Bridge nicht gefunden: " + exe);
+                return;
+            }
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(exe)
+                { UseShellExecute = false, CreateNoWindow = true, WorkingDirectory = System.IO.Path.GetDirectoryName(exe) });
+            }
+            catch (Exception e) { Debug.LogWarning("[Jogging] Bridge-Start fehlgeschlagen: " + e.Message); }
 #endif
         }
+
+        private bool speechUsed;
+        private float speechLaunch = -100f;
+
+        /// <summary>Windows: speak through the bridge ('V' + "de|text"); starts it when needed.</summary>
+        public void Speak(string text, string lang)
+        {
+            if (Offline || !Core.Platform.SpeechViaBridge) return;
+            speechUsed = true;
+            OpenSocket();
+            if (Time.unscaledTime - lastState > 6f && Time.unscaledTime - speechLaunch > 10f) { speechLaunch = Time.unscaledTime; LaunchBridge(); }
+            var bytes = System.Text.Encoding.UTF8.GetBytes("V" + lang + "|" + text);
+            SendRaw(bytes);
+        }
+
+        /// <summary>Windows: stop speaking.</summary>
+        public void StopSpeaking() { if (Core.Platform.SpeechViaBridge && speechUsed) Send((byte)'Z'); }
 
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
         // The standalone macOS build ships the bridge in Jogging.app/Contents/Resources. macOS only
@@ -325,7 +357,7 @@ namespace Jogging.Locomotion.Treadmill
         private void OpenSocket()
         {
             if (Offline) return;
-            if (!Core.Platform.HasMacBridge) { NativeBle.Start(); return; } // iPad/Android: the native plugin instead of UDP
+            if (!Core.Platform.HasBleBridge) { NativeBle.Start(); return; } // iPad/Android: the native plugin instead of UDP
             if (socket != null) return;
             try
             {
@@ -358,7 +390,7 @@ namespace Jogging.Locomotion.Treadmill
         private void SendRaw(byte[] msg)
         {
             if (Offline) return;
-            if (!Core.Platform.HasMacBridge) { NativeBle.Send(msg); return; }
+            if (!Core.Platform.HasBleBridge) { NativeBle.Send(msg); return; }
             try
             {
                 using var tx = new UdpClient();
@@ -396,7 +428,7 @@ namespace Jogging.Locomotion.Treadmill
         {
             if (Simulator != null && wanted) UpdateSimulator();
             byte[] newestStatus = null;
-            if (!Core.Platform.HasMacBridge && !Offline) NativeBle.Poll(m => inbox.Enqueue(m)); // iPad/Android plugin
+            if (!Core.Platform.HasBleBridge && !Offline) NativeBle.Poll(m => inbox.Enqueue(m)); // iPad/Android plugin
             while (inbox.TryDequeue(out var m))
             {
                 if (m.Length == 0) continue;
@@ -459,12 +491,12 @@ namespace Jogging.Locomotion.Treadmill
             if (newestStatus != null && wanted) TreadmillDataReceived?.Invoke(newestStatus);
 
             // Heartbeat to the Mac bridge: without it for 60 s it lets go of the treadmill and quits (app gone)
-            if (Core.Platform.HasMacBridge && Simulator == null && !Offline && (wanted || hrWanted) && Time.unscaledTime - heartbeatTime > 5f)
+            if (Core.Platform.HasBleBridge && Simulator == null && !Offline && (wanted || hrWanted || speechUsed) && Time.unscaledTime - heartbeatTime > 5f)
             { heartbeatTime = Time.unscaledTime; SendRaw(new[] { (byte)'K' }); }
 
             // No word from the bridge for 6 s although a device is wanted (it quit — e.g. a newer version was
             // installed — or crashed): start it again ('open' does nothing if it runs).
-            if ((wanted || hrWanted) && Simulator == null && !Offline && Core.Platform.HasMacBridge
+            if ((wanted || hrWanted) && Simulator == null && !Offline && Core.Platform.HasBleBridge
                 && Time.unscaledTime - lastState > 6f && Time.unscaledTime - relaunchTime > 10f)
             { relaunchTime = Time.unscaledTime; LaunchBridge(); }
 

@@ -94,6 +94,69 @@ namespace Jogging.EditorTools
             return Directory.Exists(outPath);
         }
 
+        public const string WinOut = "Builds/Windows/Jogging.exe";
+        private const string WinBridgeSrc = "Tools/WinBleBridge";
+
+        [MenuItem("Jogging/Build/Windows App")]
+        public static void BuildWindowsMenu()
+        {
+            PhotoRunSceneBuilder.Build();
+            bool ok = BuildWindows();
+            EditorUtility.DisplayDialog("Jogging", ok ? $"Windows-App gebaut:\n{Path.GetFullPath(WinOut)}" : "Build fehlgeschlagen – siehe Console.", "OK");
+        }
+
+        /// <summary>Headless: configures the run scene, then builds the Windows app (64-bit).</summary>
+        public static void BuildWindowsBatch()
+        {
+            PhotoRunSceneBuilder.Build();
+            bool ok = BuildWindows();
+            if (Application.isBatchMode) EditorApplication.Exit(ok ? 0 : 1);
+        }
+
+        /// <summary>
+        /// Windows 64-bit, built on the Mac: Mono (IL2CPP for Windows needs a Windows machine). Next to
+        /// Jogging.exe the Bluetooth/speech helper JoggingBleBridge.exe (Tools/WinBleBridge, .NET, built here
+        /// when its source is newer than the last build).
+        /// </summary>
+        public static bool BuildWindows()
+        {
+            PlayerSettings.productName = "Jogging";
+            if (PlayerSettings.colorSpace != ColorSpace.Linear) PlayerSettings.colorSpace = ColorSpace.Linear;
+            PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            PlayerSettings.defaultScreenWidth = 1600;
+            PlayerSettings.defaultScreenHeight = 900;
+            PlayerSettings.resizableWindow = true;
+            PlayerSettings.runInBackground = true;
+            PlayerSettings.SetScriptingBackend(NamedBuildTarget.Standalone, ScriptingImplementation.Mono2x);
+            if (!FixUrpGlobalSettings()) return false;
+            AppIcon.Apply();
+
+            string bridgeExe = WinBridgeSrc + "/bin/publish/JoggingBleBridge.exe";
+            bool stale = !File.Exists(bridgeExe);
+            if (!stale)
+                foreach (var f in Directory.GetFiles(WinBridgeSrc, "*.*", SearchOption.TopDirectoryOnly))
+                    if (File.GetLastWriteTimeUtc(f) > File.GetLastWriteTimeUtc(bridgeExe)) stale = true;
+            if (stale) RunTool("/bin/bash", $"\"{WinBridgeSrc}/build.sh\"");
+
+            string dir = Path.GetDirectoryName(WinOut);
+            if (Directory.Exists(dir)) Directory.Delete(dir, true); // no leftovers of an older build
+            var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+            {
+                scenes = new[] { PhotoRunSceneBuilder.ScenePath },
+                locationPathName = WinOut,
+                target = BuildTarget.StandaloneWindows64,
+                options = BuildOptions.None,
+            });
+            var sum = report.summary;
+            Debug.Log($"[Jogging] Windows-Build: {sum.result}, {sum.totalSize / (1024 * 1024)} MB, {sum.totalTime.TotalSeconds:0} s, Fehler {sum.totalErrors}");
+            if (sum.result != BuildResult.Succeeded) return false;
+            if (File.Exists(bridgeExe)) { File.Copy(bridgeExe, Path.Combine(dir, "JoggingBleBridge.exe"), true); Debug.Log("[Jogging] Windows-Bridge beigelegt."); }
+            else Debug.LogWarning("[Jogging] Windows-Bridge fehlt (Tools/WinBleBridge/build.sh, .NET-SDK) – App ohne Bluetooth gebaut.");
+            // the player's debugging leftovers are not needed by users
+            foreach (var d in Directory.GetDirectories(dir, "*_BurstDebugInformation_DoNotShip")) Directory.Delete(d, true);
+            return File.Exists(WinOut);
+        }
+
         // The URP global settings asset was last saved by Unity 6.6 (asset version 11); the 6.3 URP
         // only knows version 10, so the build validator rejects it ("is not at last version").
         // The data is compatible — only the version stamp is newer — so re-stamp it.

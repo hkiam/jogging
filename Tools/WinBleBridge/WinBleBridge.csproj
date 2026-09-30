@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Windows helper for the Jogging app: Bluetooth LE (treadmill, heart-rate strap) and speech, over UDP.
+       Built on the Mac too: EnableWindowsTargeting lets the SDK target Windows from macOS (Tools/WinBleBridge/build.sh). -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Nullable>disable</Nullable>
+    <AssemblyName>JoggingBleBridge</AssemblyName>
+    <RootNamespace>Jogging.WinBleBridge</RootNamespace>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <DebugType>none</DebugType>
+    <Product>Jogging BLE bridge</Product>
+    <Company></Company>
+    <Copyright>MIT</Copyright>
+  </PropertyGroup>
+</Project>

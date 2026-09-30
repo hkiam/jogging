@@ -9,7 +9,7 @@ best run and a field of fellow runners keep you going – and the whole family g
 
 ![Unity 6.3](https://img.shields.io/badge/Unity-6.3_LTS-000000?logo=unity)
 ![URP](https://img.shields.io/badge/render-URP-4c8bf5)
-![Platforms](https://img.shields.io/badge/platforms-macOS%20·%20iPad%20·%20Android-6aa84f)
+![Platforms](https://img.shields.io/badge/platforms-macOS%20·%20Windows%20·%20iPad%20·%20Android-6aa84f)
 ![Bluetooth](https://img.shields.io/badge/Bluetooth-FTMS%20·%20FitShow%20·%20Heart%20Rate-0082FC?logo=bluetooth)
 ![Languages](https://img.shields.io/badge/languages-English%20·%20Deutsch-ffb000)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -120,13 +120,14 @@ flowchart LR
 | macOS (Apple silicon & Intel) | ✅ Bluetooth via a small bundled Swift app |
 | iPad | ✅ tested on an iPad Pro 11" M4 |
 | Android tablets | ✅ tested on an Amazon Fire HD 10 |
+| Windows 10/11 | 🧪 builds; Bluetooth through a bundled .NET helper – untested so far |
 
 No treadmill? Run with the keyboard (↑/↓), the on-screen − / + buttons, or the built-in treadmill
 simulator (`-beltsim`).
 
 ## Try it
 
-Ready-made apps for **macOS** and **Android tablets** are on the
+Ready-made apps for **macOS**, **Windows** and **Android tablets** are on the
 [Releases page](https://github.com/hkiam/jogging/releases/latest) – no Unity needed. No treadmill? Use the
 arrow keys or the on-screen − / + buttons.
 
@@ -178,7 +179,7 @@ Assets/Scripts/
   UI/          HUD, menu pages, finish screen, workshop
   Editor/      scene builder, builds, asset pipeline, self-tests
 Assets/Plugins/ native Bluetooth & speech for iOS (Swift) and Android (Java)
-Tools/          MacBleBridge (Swift), test scripts, export script
+Tools/          MacBleBridge (Swift), WinBleBridge (C#/.NET), test, export and release scripts
 docs/           setup, user manual and developer docs (German)
 ```
 

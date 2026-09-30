@@ -12,6 +12,10 @@ namespace Jogging.Core
     /// </summary>
     public static class KeepAwake
     {
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        [DllImport("kernel32.dll")] private static extern uint SetThreadExecutionState(uint flags);
+        private const uint ES_CONTINUOUS = 0x80000000, ES_SYSTEM_REQUIRED = 0x1, ES_DISPLAY_REQUIRED = 0x2;
+#endif
 #if UNITY_STANDALONE_OSX && !UNITY_EDITOR
         private const string IOKit = "/System/Library/Frameworks/IOKit.framework/IOKit";
         private const string CF = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
@@ -25,6 +29,11 @@ namespace Jogging.Core
         private static void Init()
         {
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+            // Windows: display and system stay on while the app runs (released when the process ends)
+            try { SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED); }
+            catch (Exception e) { Debug.LogWarning("[Jogging] Ruhezustand kann nicht verhindert werden: " + e.Message); }
+#endif
 #if UNITY_STANDALONE_OSX && !UNITY_EDITOR
             if (taken) return;
             try

@@ -19,10 +19,27 @@ namespace Jogging.Core
         public static bool LowMemory => Args.Has("-lowmem") || (SystemInfo.systemMemorySize > 0 && SystemInfo.systemMemorySize < 4000);
 
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-        /// <summary>The Swift bridge (Bluetooth to belt and strap) and shell commands are available.</summary>
+        /// <summary>The Swift bridge (Bluetooth to belt and strap), macOS speech, QR reading and shell commands are available.</summary>
         public const bool HasMacBridge = true;
 #else
         public const bool HasMacBridge = false;
+#endif
+
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX || UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        /// <summary>
+        /// A bridge helper app speaks Bluetooth LE for the app over UDP: Tools/MacBleBridge (macOS) or
+        /// Tools/WinBleBridge (Windows, which also speaks the announcements).
+        /// </summary>
+        public const bool HasBleBridge = true;
+#else
+        public const bool HasBleBridge = false;
+#endif
+
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+        /// <summary>Windows: the bridge also speaks (Windows has no "say").</summary>
+        public const bool SpeechViaBridge = true;
+#else
+        public const bool SpeechViaBridge = false;
 #endif
     }
 }

@@ -43,6 +43,12 @@ namespace Jogging.UI
         {
             if (!Enabled || string.IsNullOrEmpty(text)) return;
             Debug.Log("[Jogging] Ansage: " + text);
+            if (Platform.SpeechViaBridge) // Windows: the bridge speaks (Windows speech)
+            {
+                var bridge = FindFirstObjectByType<Jogging.Locomotion.Treadmill.MacBleBridgeTransport>();
+                if (bridge != null) bridge.Speak(text, Loc.En ? "en" : "de");
+                return;
+            }
             if (!Platform.HasMacBridge) { NativeSpeech.Say(text); return; } // iPad / Android: the system voice
             // Replaces what is being said; in the background (don't wait for the speech).
             if (Shell.Run("/usr/bin/killall say 2>/dev/null; /usr/bin/say -v " + (Loc.En ? "Samantha -r 180 " : "Anna -r 185 ") + Shell.Quote(text) + " >/dev/null 2>&1 &") != 0)
@@ -58,7 +64,8 @@ namespace Jogging.UI
         private void Stop()
         {
             if (!Enabled) return;
-            if (Platform.HasMacBridge) Shell.Run("/usr/bin/killall say 2>/dev/null");
+            if (Platform.SpeechViaBridge) FindFirstObjectByType<Jogging.Locomotion.Treadmill.MacBleBridgeTransport>()?.StopSpeaking();
+            else if (Platform.HasMacBridge) Shell.Run("/usr/bin/killall say 2>/dev/null");
             else NativeSpeech.Stop();
         }
 

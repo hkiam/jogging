@@ -1,7 +1,7 @@
 #!/bin/bash
 # A release on GitHub with ready-made apps (github.com/hkiam/jogging):
 #   1. brings the public repository up to date (Tools/export-public.sh --push),
-#   2. builds the Mac app and the Android APK from a neutral folder (/tmp/Jogging, a git worktree of HEAD) –
+#   2. builds the Mac app, the Windows app and the Android APK from a neutral folder (/tmp/Jogging, a git worktree of HEAD) –
 #      a build keeps its source paths for error messages, so the apps don't show this machine's user name,
 #   3. checks both apps for this machine's user name, home folder and the local commit address/domain,
 #   4. runs the end-to-end test on the release Mac app,
@@ -32,6 +32,9 @@ git worktree add -q --detach "$WT" HEAD
 trap 'git -C "$SRC" worktree remove --force "$WT" 2>/dev/null || true' EXIT
 (cd "$WT" && "$UNITY" -batchmode -quit -projectPath . -buildTarget OSXUniversal -executeMethod Jogging.EditorTools.BuildTools.BuildMacBatch -logFile "$LOGS/mac.log") \
   || { echo "Mac-Build fehlgeschlagen: $LOGS/mac.log"; exit 1; }
+(cd "$WT" && "$UNITY" -batchmode -quit -projectPath . -buildTarget StandaloneWindows64 -executeMethod Jogging.EditorTools.BuildTools.BuildWindowsBatch -logFile "$LOGS/windows.log") \
+  || { echo "Windows-Build fehlgeschlagen: $LOGS/windows.log"; exit 1; }
+[ -f "$WT/Builds/Windows/JoggingBleBridge.exe" ] || { echo "Windows-Bridge fehlt (.NET-SDK installiert?): $LOGS/windows.log"; exit 1; }
 (cd "$WT" && "$UNITY" -batchmode -quit -projectPath . -buildTarget Android -executeMethod Jogging.EditorTools.MobileBuild.BuildAndroidBatch -logFile "$LOGS/android.log") \
   || { echo "Android-Build fehlgeschlagen: $LOGS/android.log"; exit 1; }
 MIN_MAC="$(/usr/libexec/PlistBuddy -c "Print :LSMinimumSystemVersion" "$WT/Builds/macOS/Jogging.app/Contents/Info.plist" | cut -d. -f1)"
@@ -45,7 +48,7 @@ bad=0
 for p in "${PATTERNS[@]}"; do
   [ -z "$p" ] && continue
   # text in the apps (strings of 5+ characters: random bytes in images or meshes don't count)
-  for f in $(find "$WT/Builds/macOS/Jogging.app" "$APKX" -type f -size +0); do
+  for f in $(find "$WT/Builds/macOS/Jogging.app" "$WT/Builds/Windows" "$APKX" -type f -size +0); do
     if strings -n 5 "$f" 2>/dev/null | grep -qiF -- "$p"; then echo "  „$p“ in ${f#$OUT/}"; bad=1; fi
   done
 done
@@ -58,8 +61,9 @@ grep "ERGEBNIS" "$LOGS/e2e.txt"
 echo "== 5/5 Release $TAG auf GitHub"
 ditto -c -k --keepParent "$WT/Builds/macOS/Jogging.app" "$OUT/Jogging-macOS.zip"
 cp "$WT/Builds/Android/Jogging.apk" "$OUT/Jogging-Android.apk"
+(cd "$WT/Builds" && ditto -c -k --keepParent Windows "$OUT/Jogging-Windows.zip")
 sed -e "s/{{MIN_MAC}}/$MIN_MAC/g" Tools/release-notes.md > "$OUT/notes.md"
 if [ -f "docs/release-$VERSION.md" ]; then { printf '\n## New in %s\n\n' "$VERSION"; cat "docs/release-$VERSION.md"; } >> "$OUT/notes.md"; fi
-gh release create "$TAG" "$OUT/Jogging-macOS.zip" "$OUT/Jogging-Android.apk" --repo "$REPO" --target main \
+gh release create "$TAG" "$OUT/Jogging-macOS.zip" "$OUT/Jogging-Windows.zip" "$OUT/Jogging-Android.apk" --repo "$REPO" --target main \
   --title "Jogging $VERSION" --notes-file "$OUT/notes.md" $DRAFT
 echo "Fertig: https://github.com/$REPO/releases/tag/$TAG  (Protokolle: $LOGS)"

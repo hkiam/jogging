@@ -4,6 +4,13 @@
 
 (nichts)
 
+## Dreizehnter Merge (30.09.2026) – Windows-Version, Release 1.1
+
+- **Windows-Version**: `BuildTools.BuildWindowsBatch` (am Mac gebaut, Mono), `Builds/Windows/` mit der neuen
+  **Windows-Bridge** `Tools/WinBleBridge` (C#/.NET 10, WinRT-Bluetooth, gleiches UDP-Protokoll wie die Mac-Bridge,
+  dazu die Ansagen über die Windows-Sprachausgabe). Bildschirm bleibt an (SetThreadExecutionState). `release.sh`
+  baut und veröffentlicht sie mit. Bluetooth unter Windows ist ungetestet (kein Windows-Rechner).
+
 ## Zwölfter Merge (30.09.2026) – Pulscoach, Streckensammlung, Release-Skript
 
 - **Pulscoach** (Profil → Pulscoach: aus / nur in Workouts / immer mit Zielzone): sagt Bescheid, wenn der Puls

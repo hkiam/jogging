@@ -134,6 +134,21 @@ Mit einer kostenlosen Apple-ID läuft die App 7 Tage, dann einfach neu installie
 angeschlossen, `ANDROID_SERIAL` setzen (auch für `Tools/e2e-mobile.sh android`).
 Gesamt-Durchlauf im Simulator/Emulator: `Tools/e2e-mobile.sh ios` bzw. `Tools/e2e-mobile.sh android`.
 
+### Windows
+
+Die Windows-Version wird am Mac gebaut (Modul „Windows Build Support (Mono)“ im Unity Hub; IL2CPP für Windows
+bräuchte einen Windows-Rechner):
+
+```bash
+/Applications/Unity/Hub/Editor/6000.3.24f1/Unity.app/Contents/MacOS/Unity -batchmode -quit -projectPath . -buildTarget StandaloneWindows64 -executeMethod Jogging.EditorTools.BuildTools.BuildWindowsBatch -logFile windows.log
+```
+
+Ergebnis: `Builds/Windows/` mit `Jogging.exe` und `JoggingBleBridge.exe`. Die Bridge (`Tools/WinBleBridge`,
+C#/.NET 10, WinRT-Bluetooth) spricht dasselbe UDP-Protokoll wie die Mac-Bridge und liest zusätzlich die Ansagen
+vor (`'V'+"de|Text"`); der Build baut sie mit `Tools/WinBleBridge/build.sh`, wenn ihr Quelltext neuer ist (braucht das
+.NET-SDK; Pakete kommen nur von nuget.org, siehe `Tools/WinBleBridge/nuget.config`). **Noch nicht auf einem echten
+Windows-Rechner getestet.**
+
 ### Startoptionen (für Tests)
 
 | Option | Wirkung |

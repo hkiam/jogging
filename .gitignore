@@ -40,6 +40,11 @@ crashlytics-build.properties
 # Android build temp
 /.utmp/
 
+# Windows bridge build output
+Tools/WinBleBridge/bin/
+Tools/WinBleBridge/obj/
+!Tools/WinBleBridge/WinBleBridge.csproj
+
 # Asset Store packages – import them yourself (docs/Setup.md); their licence doesn't allow sharing
 /[Aa]ssets/MapMagic/
 /[Aa]ssets/MapMagic.meta

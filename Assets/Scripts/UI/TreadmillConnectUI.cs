@@ -148,7 +148,7 @@ namespace Jogging.UI
                 status.text = Jogging.Core.Loc.F("Band <b>{0}</b>  {1:0} %  ·  {2}", Jogging.Core.Units.FmtSpeed(treadmill.SpeedMps * 3.6f), treadmill.InclinePercent, ControlText());
             }
             else if (connected) status.text = Jogging.Core.Loc.T("Laufband verbunden …");
-            else if (!Core.Platform.HasMacBridge && !Jogging.Locomotion.Treadmill.NativeBle.Available && !(bridge != null && bridge.Simulator != null))
+            else if (!Core.Platform.HasBleBridge && !Jogging.Locomotion.Treadmill.NativeBle.Available && !(bridge != null && bridge.Simulator != null))
                 status.text = Jogging.Core.Loc.T("Tempo mit − / +  (Laufband folgt)"); // iPad/Android: no Bluetooth to the belt yet
             else if (bridge != null && bridge.Wanted) status.text = bridge.StatusText.StartsWith("Bridge") || bridge.StatusText.StartsWith("UDP") ? Short(bridge.StatusText) : Jogging.Core.Loc.T("Suche Laufband …");
             else status.text = Jogging.Core.Loc.T("Tastatur  (Laufband: Einstellungen)");

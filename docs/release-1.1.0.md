@@ -1,0 +1,5 @@
+- **Windows version** (new, experimental): `Jogging-Windows.zip` with a Bluetooth and speech helper – not yet tested on a real Windows PC.
+- **Pulse coach** (optional, per runner in the profile): speaks up when your heart rate stays out of the target zone – off, only in workouts, or always with your own target zone.
+- **Route collection**: eight routes worth running with previews and QR codes in [routes/](https://github.com/hkiam/jogging/tree/main/routes).
+- **Builds with the Asset Store packages as they come** – no changes inside MapMagic needed any more (see docs/Setup.md).
+- Fixes: English texts in the route editor, the grass check along the trail.

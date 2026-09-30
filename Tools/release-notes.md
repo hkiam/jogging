@@ -5,6 +5,7 @@ Ready-to-run builds, no Unity needed.
 | File | For |
 |---|---|
 | **Jogging-macOS.zip** | macOS {{MIN_MAC}}+ (Apple silicon and Intel) |
+| **Jogging-Windows.zip** | Windows 10/11, 64-bit – Bluetooth (treadmill, heart-rate strap) is **experimental and untested** |
 | **Jogging-Android.apk** | Android tablets (landscape), Android 8+ |
 
 The iPad version needs to be built and signed yourself (see [docs/Entwicklung.md](https://github.com/hkiam/jogging/blob/main/docs/Entwicklung.md)).
@@ -20,6 +21,13 @@ xattr -dr com.apple.quarantine /Applications/Jogging.app
 ```
 
 On the first run the app installs a small helper for Bluetooth (`JoggingBleScan.app`); allow Bluetooth when asked.
+
+### Windows: first start
+
+Unzip the folder anywhere and start `Jogging.exe`. Windows SmartScreen may warn about an unknown app (it isn't
+signed): *More info → Run anyway*. `JoggingBleBridge.exe` next to it handles Bluetooth and the spoken
+announcements; allow it when Windows asks. The Windows Bluetooth helper hasn't been tested on a real treadmill
+yet – feedback welcome in the issues.
 
 ### Android: install
 
