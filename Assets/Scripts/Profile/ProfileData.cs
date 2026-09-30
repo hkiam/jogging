@@ -29,6 +29,7 @@ namespace Jogging.Profile
 
         // Ghost runner on saved routes (your best run runs along); true = switched off.
         public bool ghostOff;
+        public int pulseCoach;          // pulse coach: −1 off, 0 only in workouts with a target zone, 1…5 also in free runs (this zone)
 
         // Training plan: the active one (empty = none), when it started, the completed session indices,
         // and the plans finished so far.

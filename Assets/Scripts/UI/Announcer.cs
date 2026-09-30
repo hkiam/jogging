@@ -25,7 +25,7 @@ namespace Jogging.UI
 
         public static bool Enabled => AppSettings.Current.announcements;
 
-        private void Awake() { Current = this; }
+        private void Awake() { Current = this; CoachHints = 0; }
         private void OnDestroy() { if (Current == this) Current = null; Stop(); }
 
         private void Start()
@@ -62,6 +62,10 @@ namespace Jogging.UI
             else NativeSpeech.Stop();
         }
 
+        private readonly PulseCoach coach = new PulseCoach();
+        /// <summary>Hints the pulse coach gave in this run (tests).</summary>
+        public static int CoachHints { get; private set; }
+
         private void Update()
         {
             var sm = RunSessionUI.Session;
@@ -87,6 +91,21 @@ namespace Jogging.UI
             // 5 s before a timed workout segment ends: beeps (the next segment is announced when it starts)
             var r = WorkoutRuntime.Runner;
             var seg = r?.Current;
+
+            // pulse coach: the segment's target zone, or the runner's own one in a free run (profile)
+            var me = Jogging.Profile.ProfileService.Instance != null ? Jogging.Profile.ProfileService.Instance.Profile : null;
+            int coachSetting = me != null ? me.pulseCoach : 0;
+            int target = coachSetting < 0 ? 0 : seg != null ? seg.hrZone : WorkoutRuntime.Current == null ? coachSetting : 0;
+            var hrm = HeartRateMonitor.Current;
+            int zone = hrm != null ? hrm.Zone : 0;
+            var hint = coach.Step(stats.ElapsedSeconds, zone, target);
+            if (hint != PulseCoach.Hint.None)
+            {
+                string text = PulseCoach.Text(hint, zone, target);
+                CoachHints++;
+                RaceMessages.Post(text); // on screen too (also with the announcements off)
+                Say(text);
+            }
             if (seg != null && !seg.ByDistance && r.Remaining <= 5f && r.Remaining > 0f)
             {
                 int second = Mathf.CeilToInt(r.Remaining);

@@ -193,6 +193,15 @@ Was geholfen hat:
 Lokale Änderungen an MapMagic: `Tools/Erosion.cs`, `Tools/TileManager.cs`, `Tools/ThreadManager/*`,
 `Terrains/TerrainTile(Manager).cs`, `Nodes/Graph.cs`/`Generator.cs` (Knotenzeiten) – jeweils mit „Jogging“ kommentiert.
 
+## Veröffentlichen (GitHub)
+
+- Code: `Tools/export-public.sh --push` – bringt die öffentliche Kopie (`../Jogging-public`, ohne Asset-Store-Pakete)
+  auf den Stand und lädt einen Commit „Release <Datum>“ hoch.
+- Release mit Apps: `Tools/release.sh 1.1.0` – Code hochladen, Mac-App und APK in einem neutralen Ordner bauen
+  (`/tmp/Jogging`, damit keine eigenen Pfade in den Apps stehen), auf persönliche Spuren prüfen, E2E mit der
+  Release-App, GitHub-Release mit `Tools/release-notes.md` (+ `docs/release-<version>.md` für die Neuerungen).
+  Unity darf dabei nicht offen sein; Dauer etwa 40–60 min.
+
 ## App-Icon
 
 Motiv: `Assets/Art/Icon/Source~/Vorlage.png`. `Tools/make-icon.py` erzeugt daraus das randlose Quadrat

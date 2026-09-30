@@ -39,7 +39,7 @@ It started as a family project: one treadmill, several runners, a shared weekly 
 | 🏃 **You're not alone** | Fellow runners that match your pace, a rival just ahead to chase, overtakes, spectators, and a see-through ghost of your best run. |
 | ⛰️ **The treadmill follows the hills** | FitShow (e.g. Sportstech F37) and standard FTMS treadmills: incline from the route, speed from workouts (opt-in). Every command passes one safety layer. |
 | ❤️ **Heart rate** | Any Bluetooth heart-rate strap, or the treadmill's hand sensors; zones on screen and in the logbook. |
-| 📋 **Train with a plan** | Workouts (intervals, pyramids, hills, zone 2 …), your own workout editor, multi-week training plans, spoken announcements. |
+| 📋 **Train with a plan** | Workouts (intervals, pyramids, hills, zone 2 …), your own workout editor, multi-week training plans, spoken announcements, and an optional pulse coach that speaks up when your heart rate stays out of the target zone. |
 | 👨‍👩‍👧 **Family profiles** | Several runners, each with a figure, logbook (1 Hz samples), statistics, 24 achievements, weekly goals and a family challenge. TCX export. |
 | 🛠️ **Make your own routes** | Route editor (length, climbs, curviness, vegetation, water, season, weather, time of day, night sky) and a workshop to add clearings, lakes, spectators, benches or a chapel exactly where you want them. |
 | 🎧 **Sounds of the way** | Synthesized live: footsteps that crunch on gravel and squeak in snow, dawn chorus, crickets, a tawny owl at night, rain, a burbling stream. |
@@ -129,6 +129,12 @@ simulator (`-beltsim`).
 Ready-made apps for **macOS** and **Android tablets** are on the
 [Releases page](https://github.com/hkiam/jogging/releases/latest) – no Unity needed. No treadmill? Use the
 arrow keys or the on-screen − / + buttons.
+
+## Route collection
+
+Eight routes worth running – morning mist at a mill brook, golden hour at the lake, an October mountain
+pass, a snowy winter forest, a starlit night trail and more – as small `.jogroute` recipes with QR codes:
+**[routes/](routes/README.md)**.
 
 ## Getting started
 

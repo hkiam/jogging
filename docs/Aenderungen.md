@@ -4,6 +4,24 @@
 
 (nichts)
 
+## Zwölfter Merge (30.09.2026) – Pulscoach, Streckensammlung, Release-Skript
+
+- **Pulscoach** (Profil → Pulscoach: aus / nur in Workouts / immer mit Zielzone): sagt Bescheid, wenn der Puls
+  20 s aus der Zielzone ist („Etwas ruhiger – Zone 4, dein Ziel ist Zone 2“), höchstens jede Minute, nicht in der
+  ersten Minute; „Gut so“, wenn er zurück ist. Auch als Einblendung, wenn die Ansagen aus sind.
+- **Streckensammlung** `routes/` (8 Strecken mit Vorschaubild und QR-Code, erzeugt von `Editor/RouteCollection`,
+  Bilder von `Tools/route-previews.sh`).
+- **Release-Skript** `Tools/release.sh <version>`: Code hochladen, Apps im neutralen Ordner bauen, prüfen, testen,
+  GitHub-Release.
+
+## Elfter Merge (30.09.2026) – GitHub-Veröffentlichung
+
+- **Veröffentlicht** als <https://github.com/hkiam/jogging> (MIT), erstes Release **Jogging 1.0** mit Mac-App und
+  Android-APK. `Tools/export-public.sh --push` bringt Änderungen als Commit „Release <Datum>“ hinauf.
+- **Baut mit dem unveränderten MapMagic 2** aus dem Asset Store (`World/MapMagicExt` findet die Anpassungen zur
+  Laufzeit); geprüft mit einem frischen GitHub-Klon (E2E 111/111). Idyllic Fantasy Nature ist ein eigenes Paket
+  (Edenity). `Tools/unpack-unitypackage.py` entpackt die Pakete ohne Unity.
+
 ## Zehnter Merge (29.09.2026) – Himmel, Wegrand, Wegbeläge, Nachtläufe, Veröffentlichung
 
 - **Himmel neu** (eigener Shader statt des Unity-Standardhimmels): Wolken in vier Schichten mit eigener Höhe

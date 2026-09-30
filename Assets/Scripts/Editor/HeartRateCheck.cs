@@ -50,6 +50,21 @@ namespace Jogging.EditorTools
             var back = WorkoutStore.FromJson(WorkoutStore.ToJson(z2));
             Ok(back != null && back.segments[1].hrZone == 2, "Zielzone im JSON");
 
+            // Pulse coach: patient, not repeating, quiet in the first minute and without pulse
+            var pc = new Jogging.Training.PulseCoach();
+            var H = Jogging.Training.PulseCoach.Hint.None;
+            Ok(pc.Step(30f, 4, 2) == H, "Pulscoach: in der ersten Minute still");
+            Ok(pc.Step(61f, 4, 2) == H && pc.Step(75f, 4, 2) == H, "Pulscoach: wartet 20 s ab");
+            Ok(pc.Step(82f, 4, 2) == Jogging.Training.PulseCoach.Hint.Slower, "Pulscoach: „ruhiger“ nach 20 s in Zone 4 (Ziel 2)");
+            Ok(pc.Step(100f, 4, 2) == H, "Pulscoach: wiederholt nicht gleich");
+            Ok(pc.Step(143f, 4, 2) == Jogging.Training.PulseCoach.Hint.Slower, "Pulscoach: nach 60 s wieder");
+            Ok(pc.Step(150f, 2, 2) == Jogging.Training.PulseCoach.Hint.Good && pc.Step(151f, 2, 2) == H, "Pulscoach: „gut so“ einmal");
+            Ok(pc.Step(160f, 0, 2) == H && pc.Step(260f, 0, 2) == H, "Pulscoach: ohne Puls still");
+            Ok(pc.Step(300f, 1, 0) == H, "Pulscoach: ohne Ziel still");
+            var c2 = new Jogging.Training.PulseCoach();
+            c2.Step(100f, 1, 3);
+            Ok(c2.Step(121f, 1, 3) == Jogging.Training.PulseCoach.Hint.Faster, "Pulscoach: „schneller“ unter der Zielzone");
+
             if (fails.Count == 0) Debug.Log("[HeartRateCheck] Alle Prüfungen bestanden.");
             else Debug.LogError("[HeartRateCheck] FAIL → " + string.Join("; ", fails));
             return fails.Count == 0;

@@ -760,6 +760,11 @@ namespace Jogging.Core
             ["dunstig"] = "hazy",
             ["neblig"] = "foggy",
             ["keine"] = "none",
+            ["Pulscoach"] = "Pulse coach",
+            ["nur in Workouts"] = "only in workouts",
+            ["immer · Ziel Zone {0}"] = "always · target zone {0}",
+            ["sagt Bescheid, wenn der Puls länger aus der Zielzone ist"] = "speaks up when your pulse stays out of the target zone",
+            ["aus"] = "off",
         };
     }
 }
