@@ -9,12 +9,22 @@ namespace Jogging.Profile
     /// <summary>
     /// Export a run as TCX (Garmin Training Center XML) — the format Strava, Garmin Connect and others
     /// import for indoor runs: one lap with time, distance, calories and heart rate, and a trackpoint
-    /// per second (time, distance, heart rate, speed). No GPS (treadmill, virtual landscape).
+    /// per second (time, altitude, distance, heart rate, speed). No GPS (treadmill, virtual landscape);
+    /// the altitude follows the incline you ran, so the elevation gain shows up there too.
     /// Plain .NET (tested by StatsCheck).
     /// </summary>
     public static class TcxExport
     {
         private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
+        private const double BaseAltitude = 100.0; // start height (m) of the virtual altitude – never below sea level
+
+        /// <summary>File name for a run: Jogging-&lt;Runner&gt;-&lt;local start time&gt;.tcx.</summary>
+        public static string FileName(SessionRecord rec, string runnerName)
+        {
+            var t = RunnerStats.ParseUtc(rec.summary.start).ToLocalTime();
+            string safe = new string((runnerName ?? "Lauf").Where(char.IsLetterOrDigit).ToArray());
+            return $"Jogging-{safe}-{t:yyyy-MM-dd-HHmmss}";
+        }
 
         public static string ToTcx(SessionRecord rec)
         {
@@ -40,10 +50,15 @@ namespace Jogging.Profile
                 sb.Append($"        <MaximumHeartRateBpm><Value>{s.maxHr}</Value></MaximumHeartRateBpm>\n");
             }
             sb.Append("        <Intensity>Active</Intensity>\n        <TriggerMethod>Manual</TriggerMethod>\n        <Track>\n");
+            double alt = BaseAltitude, lastDist = 0;
             foreach (var p in rec.samples)
             {
+                double d = Math.Max(0, p.distM - lastDist); // the climb since the last point, from the incline you ran
+                alt += d * Math.Clamp(p.incline, -30f, 30f) / 100.0;
+                lastDist = Math.Max(lastDist, p.distM);
                 sb.Append("          <Trackpoint>");
                 sb.Append($"<Time>{Iso(start.AddSeconds(p.t))}</Time>");
+                sb.Append($"<AltitudeMeters>{F(alt)}</AltitudeMeters>");
                 sb.Append($"<DistanceMeters>{F(p.distM)}</DistanceMeters>");
                 if (p.hr > 0) sb.Append($"<HeartRateBpm><Value>{p.hr}</Value></HeartRateBpm>");
                 sb.Append($"<Extensions><ns3:TPX><ns3:Speed>{F(p.kmh / 3.6, "0.00")}</ns3:Speed></ns3:TPX></Extensions>");
@@ -61,10 +76,19 @@ namespace Jogging.Profile
         {
             string dir = Jogging.Core.DataPaths.Downloads;
             if (!Directory.Exists(dir)) dir = Jogging.Core.DataPaths.Root;
-            var t = RunnerStats.ParseUtc(rec.summary.start).ToLocalTime();
-            string safe = new string((runnerName ?? "Lauf").Where(char.IsLetterOrDigit).ToArray());
-            string name = $"Jogging-{safe}-{t:yyyy-MM-dd-HHmmss}";
+            return SaveTo(dir, rec, runnerName, false);
+        }
+
+        /// <summary>
+        /// Write the TCX into a folder; returns the path. once = the same run is written only once (an existing
+        /// file with its name counts as done – automatic and bulk export); otherwise a second export gets "-2" ….
+        /// </summary>
+        public static string SaveTo(string dir, SessionRecord rec, string runnerName, bool once)
+        {
+            Directory.CreateDirectory(dir);
+            string name = FileName(rec, runnerName);
             string path = Path.Combine(dir, name + ".tcx");
+            if (once && File.Exists(path)) return path;
             for (int n = 2; File.Exists(path); n++) path = Path.Combine(dir, $"{name}-{n}.tcx"); // never overwrite
             File.WriteAllText(path, ToTcx(rec), new UTF8Encoding(false));
             return path;

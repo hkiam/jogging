@@ -123,9 +123,12 @@ namespace Jogging.Route
             return sb.ToString();
         }
 
-        public class Candidate { public RouteDoc doc; public string file; public string status; public bool importable; }
+        public class Candidate { public RouteDoc doc; public string file; public string status; public bool importable; public string error; }
 
-        /// <summary>.jogroute files in Downloads and on the Desktop, with their state against the local routes.</summary>
+        /// <summary>
+        /// .jogroute and .gpx files in Downloads and on the Desktop, with their state against the local routes
+        /// (a GPX file that can't be used comes with <c>error</c> and no doc).
+        /// </summary>
         public static List<Candidate> FindFiles()
         {
             var local = RouteStore.LoadAll();
@@ -139,6 +142,13 @@ namespace Jogging.Route
                     var d = RouteStore.Load(f);
                     if (d == null) continue;
                     list.Add(new Candidate { doc = d, file = f, status = StateOf(d, local, out bool ok), importable = ok });
+                }
+                foreach (var f in Directory.GetFiles(dir, "*" + GpxImport.Extension))
+                {
+                    if (new FileInfo(f).Length > MaxFileBytes) { list.Add(new Candidate { file = f, error = Jogging.Core.Loc.T("Datei zu groß") }); continue; }
+                    var d = GpxImport.Load(f, out string err);
+                    if (d == null) { list.Add(new Candidate { file = f, error = err }); continue; }
+                    list.Add(new Candidate { doc = d, file = f, status = "GPX · " + StateOf(d, local, out bool ok), importable = ok });
                 }
             }
             return list;

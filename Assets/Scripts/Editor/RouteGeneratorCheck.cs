@@ -96,8 +96,79 @@ namespace Jogging.EditorTools
                 if (fails.Count == 0) Debug.Log("[RouteCheck] OK   " + info);
                 else { ok = false; Debug.LogError("[RouteCheck] FAIL " + info + " → " + string.Join("; ", fails)); }
             }
+            ok &= GpxChecks();
             Debug.Log(ok ? "[RouteCheck] Alle Prüfungen bestanden." : "[RouteCheck] Es gibt Fehler.");
             return ok;
+        }
+
+        // GPX import: a loop around a hill, an out-and-back route plan without heights, broken files
+        private static bool GpxChecks()
+        {
+            var fails = new List<string>();
+            string Gpx(string body) => "<?xml version=\"1.0\"?><gpx version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\">" +
+                                       "<wpt lat=\"50\" lon=\"8\"><name>Parkplatz</name></wpt>" + body + "</gpx>";
+            string F(double v) => v.ToString("0.0000000", System.Globalization.CultureInfo.InvariantCulture);
+
+            // 1) a loop of r = 500 m (3.14 km) with one 30 m hill, recorded in July
+            var sb = new System.Text.StringBuilder("<trk><name>Hausrunde</name><trkseg>");
+            for (int i = 0; i <= 600; i++)
+            {
+                double t = i / 600.0 * 2 * System.Math.PI;
+                double lat = 50 + 500 * System.Math.Sin(t) / 111320.0, lon = 8 + 500 * (1 - System.Math.Cos(t)) / (111320.0 * System.Math.Cos(50 * System.Math.PI / 180));
+                double ele = 200 + 30 * System.Math.Pow(System.Math.Sin(t / 2), 2) + (i % 2 == 0 ? 1.5 : -1.5); // GPS noise
+                sb.Append($"<trkpt lat=\"{F(lat)}\" lon=\"{F(lon)}\"><ele>{ele:0.0}</ele><time>2026-07-14T07:{i / 60 % 60:00}:{i % 60:00}Z</time></trkpt>");
+            }
+            sb.Append("</trkseg></trk>");
+            string xml = Gpx(sb.ToString());
+            var d = GpxImport.FromXml(xml, "hausrunde", out string err);
+            if (d == null) fails.Add("GPX Runde nicht gelesen: " + err);
+            else
+            {
+                var p = d.@params;
+                if (d.meta.name != "Hausrunde") fails.Add($"GPX: Name „{d.meta.name}“");
+                if (!p.loop) fails.Add("GPX: Runde nicht als Rundkurs erkannt");
+                if (Mathf.Abs(p.lengthKm - 3.1416f) > 0.05f) fails.Add($"GPX: Länge {p.lengthKm:0.000} km statt 3,142");
+                if (p.season != "summer") fails.Add($"GPX: Jahreszeit {p.season} statt summer");
+                float top = 0f; foreach (var h in d.profile.heightsM) top = Mathf.Max(top, h);
+                if (Mathf.Abs(top - 30f) > 4f) fails.Add($"GPX: Gipfel {top:0.0} m statt 30 m");
+                if (d.profile.ascentM > 36f || d.profile.ascentM < 24f) fails.Add($"GPX: ↑{d.profile.ascentM:0.0} m statt ≈ 30 m (Rauschen nicht geglättet?)");
+                if (Mathf.Abs(d.profile.heightsM[d.profile.heightsM.Length - 1]) > 0.5f) fails.Add("GPX: Runde endet nicht auf Starthöhe");
+                if (p.curviness < 0.15f || p.curviness > 0.6f) fails.Add($"GPX: Kurvigkeit {p.curviness:0.00}");
+                if (!RouteStore.IsValidId(d.id)) fails.Add($"GPX: ungültige Id {d.id}");
+                var again = GpxImport.FromXml(xml, "hausrunde", out _);
+                if (again == null || again.id != d.id || again.generator.seed != d.generator.seed) fails.Add("GPX: zweimal dieselbe Datei → andere Strecke");
+                // stored, shared and loaded again: the same profile
+                var back = RouteStore.FromJson(RouteStore.ToJson(d));
+                RouteGenerator.Generate(back);
+                if (back.profile.heightsM.Length != d.profile.heightsM.Length || Mathf.Abs(back.profile.ascentM - d.profile.ascentM) > 0.01f) fails.Add("GPX: nach Speichern anderes Profil");
+                string code = RouteShare.ToCode(d);
+                var shared = RouteShare.FromCode(code, out bool match, out string cerr);
+                if (shared == null || !match) fails.Add("GPX: Teilen-Code " + (cerr ?? "Profil weicht ab"));
+                Debug.Log($"[RouteCheck] GPX Runde: {p.lengthKm:0.00} km, ↑{d.profile.ascentM:0} m, Kurvigkeit {p.curviness:0.00}, Code {code.Length} Zeichen");
+            }
+
+            // 2) a planned out-and-back route (rtept, no heights): open, flat, a turning point is no curve
+            sb.Clear(); sb.Append("<rte><name>Hin und zurück</name>");
+            for (int i = 0; i <= 100; i++) { double s = i <= 50 ? i * 20 : (100 - i) * 20; sb.Append($"<rtept lat=\"{F(50 + s / 111320.0)}\" lon=\"{F(8 + (i <= 50 ? 0.00001 : 0))}\"/>"); }
+            sb.Append("</rte>");
+            d = GpxImport.FromXml(Gpx(sb.ToString()), "hin", out err);
+            if (d == null) fails.Add("GPX Hin und zurück nicht gelesen: " + err);
+            else
+            {
+                if (Mathf.Abs(d.@params.lengthKm - 2f) > 0.03f) fails.Add($"GPX hin/zurück: {d.@params.lengthKm:0.00} km statt 2");
+                if (d.profile.ascentM > 0.5f) fails.Add("GPX ohne Höhen: nicht flach");
+                if (d.@params.curviness > 0.1f) fails.Add($"GPX hin/zurück: Kurvigkeit {d.@params.curviness:0.00} (Wende als Kurve gezählt)");
+                if (!d.@params.loop) fails.Add("GPX hin/zurück: endet am Start → Rundkurs erwartet");
+            }
+
+            // 3) unusable files say why
+            if (GpxImport.FromXml("kein xml <", "x", out err) != null || string.IsNullOrEmpty(err)) fails.Add("GPX: kaputte Datei angenommen");
+            if (GpxImport.FromXml(Gpx("<trk><trkseg><trkpt lat=\"50\" lon=\"8\"/><trkpt lat=\"50.0001\" lon=\"8\"/></trkseg></trk>"), "x", out err) != null) fails.Add("GPX: 11 m lange Strecke angenommen");
+            if (GpxImport.FromXml("<!DOCTYPE x [<!ENTITY a \"b\">]><gpx/>", "x", out err) != null) fails.Add("GPX: DTD angenommen");
+
+            foreach (var f in fails) Debug.LogError("[RouteCheck] FAIL " + f);
+            if (fails.Count == 0) Debug.Log("[RouteCheck] OK   GPX-Import");
+            return fails.Count == 0;
         }
 
         private static float MinRadius(List<Vector2> p, bool loop)

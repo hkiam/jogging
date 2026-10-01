@@ -4,6 +4,20 @@
 
 (nichts)
 
+## Sechzehnter Merge (01.10.2026) – GPX-Strecken, Export, Steigung nach Puls
+
+- **Export ausgebaut** (Statistik → „Export (Strava, Garmin …)“): alle Läufe auf einmal als TCX nach
+  Downloads › Jogging-Export, auf Wunsch automatisch nach jedem Lauf; Knopf auf dem Zielbildschirm. Die TCX-Dateien
+  enthalten jetzt die gelaufenen Höhenmeter (aus der Steigung), sodass Strava & Co. sie zeigen.
+- **GPX-Strecken** (Route/GpxImport): eine echte Runde aus Strava, Garmin, Komoot … als GPX in Downloads →
+  Importieren. Länge, Höhenprofil (geglättet) und Runde/Strecke exakt, Kurvigkeit sinngemäß, Jahreszeit aus dem
+  Datum; Landschaft frei wählbar (Vorlagen ändern dann nur Landschaft und Stimmung). Gespeichert als Höhen alle
+  20 m in der Strecke, auch teilbar per Code.
+- **Steigung nach Puls** (Profil, je Läufer): hält den Puls in der Zielzone, indem die App die Steigung um
+  einen Bandschritt zurücknimmt oder erhöht (nach 30 s außerhalb, dann 60 s warten; +4 % / −10 % gegenüber der
+  Strecke, Bandgrenzen und Sicherheitsschicht gelten). Nur wenn die App die Steigung stellt; das Tempo bleibt
+  beim Läufer.
+
 ## Fünfzehnter Merge (01.10.2026) – Zuschauer einstellbar
 
 - **Zuschauer einstellbar** (Streckeneinstellung „Zuschauer“: keine / wenige / einige / viele, rund 0 / 8 / 20 / 80

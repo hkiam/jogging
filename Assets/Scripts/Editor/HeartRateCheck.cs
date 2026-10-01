@@ -65,6 +65,38 @@ namespace Jogging.EditorTools
             c2.Step(100f, 1, 3);
             Ok(c2.Step(121f, 1, 3) == Jogging.Training.PulseCoach.Hint.Faster, "Pulscoach: „schneller“ unter der Zielzone");
 
+            // Incline by heart rate: patient, one step at a time, waits for the pulse, stays within limits
+            var pi = new Jogging.Training.PulseIncline();
+            var C = Jogging.Training.PulseIncline.Change.None;
+            Ok(pi.Step(60f, 4, 2, 5f, 0f, 12f) == C, "Pulssteigung: nicht im Aufwärmen");
+            Ok(pi.Step(100f, 4, 2, 5f, 0f, 12f) == C && pi.Step(129f, 4, 2, 5f, 0f, 12f) == C, "Pulssteigung: wartet 30 s ab");
+            Ok(pi.Step(131f, 4, 2, 5f, 0f, 12f) == Jogging.Training.PulseIncline.Change.Down && Mathf.Approximately(pi.Offset, -1f), "Pulssteigung: 1 % runter bei Zone 4 (Ziel 2)");
+            Ok(pi.Step(170f, 4, 2, 4f, 0f, 12f) == C, "Pulssteigung: wartet, bis der Puls antwortet (60 s)");
+            Ok(pi.Step(192f, 4, 2, 4f, 0f, 12f) == Jogging.Training.PulseIncline.Change.Down && Mathf.Approximately(pi.Offset, -2f), "Pulssteigung: dann der nächste Schritt");
+            Ok(pi.Step(260f, 2, 2, 3f, 0f, 12f) == C && Mathf.Approximately(pi.Offset, -2f), "Pulssteigung: in der Zielzone bleibt es so");
+            Ok(pi.Step(300f, 0, 2, 3f, 0f, 12f) == C && pi.Step(500f, 0, 2, 3f, 0f, 12f) == C, "Pulssteigung: ohne Puls nichts");
+            var pf = new Jogging.Training.PulseIncline();
+            pf.Step(100f, 4, 2, 0f, 0f, 12f);
+            Ok(pf.Step(131f, 4, 2, 0f, 0f, 12f) == Jogging.Training.PulseIncline.Change.AtLimit && pf.Offset == 0f, "Pulssteigung: flach geht es nicht weiter runter");
+            var pu = new Jogging.Training.PulseIncline();
+            float t = 100f; pu.Step(t, 1, 3, 2f, 0f, 12f);
+            for (int i = 0; i < 10; i++) { t += 61f; pu.Step(t, 1, 3, 2f + pu.Offset, 0f, 12f); }
+            Ok(Mathf.Approximately(pu.Offset, Jogging.Training.PulseIncline.MaxOffset), $"Pulssteigung: höchstens +{Jogging.Training.PulseIncline.MaxOffset} % ({pu.Offset})");
+            var p2 = new Jogging.Training.PulseIncline();
+            p2.Step(100f, 4, 2, 6f, 0f, 12f);
+            Ok(p2.Step(131f, 4, 2, 6f, 0f, 12f, 2f) == Jogging.Training.PulseIncline.Change.Down && Mathf.Approximately(p2.Offset, -2f), "Pulssteigung: Bandschritt 2 % (F37)");
+
+            // the belt target: route grade + offset, within the belt's range
+            var mode0 = Jogging.Locomotion.Treadmill.BeltControl.Mode;
+            Jogging.Locomotion.Treadmill.BeltControl.Mode = Jogging.Locomotion.Treadmill.ControlMode.Route;
+            Jogging.Locomotion.Treadmill.BeltControl.PulseOffset = -2f;
+            Jogging.Locomotion.Treadmill.BeltControl.Targets(5f, out float? inc1, out _);
+            Jogging.Locomotion.Treadmill.BeltControl.Targets(1f, out float? inc2, out _);
+            Jogging.Locomotion.Treadmill.BeltControl.PulseOffset = 0f;
+            Jogging.Locomotion.Treadmill.BeltControl.Targets(5f, out float? inc3, out _);
+            Jogging.Locomotion.Treadmill.BeltControl.Mode = mode0;
+            Ok(inc1 == 3f && inc2 == 0f && inc3 == 5f, $"Pulssteigung am Band: {inc1} / {inc2} / {inc3} statt 3 / 0 / 5");
+
             if (fails.Count == 0) Debug.Log("[HeartRateCheck] Alle Prüfungen bestanden.");
             else Debug.LogError("[HeartRateCheck] FAIL → " + string.Join("; ", fails));
             return fails.Count == 0;

@@ -165,11 +165,36 @@ namespace Jogging.Profile
             LastPlanNote = CountPlanSession(s);
             Save();
             var unlocked = CheckAchievements(s);
+            if (Core.AppSettings.Current.autoExport) // for Strava, Garmin & co.: the run lands in the export folder by itself
+            {
+                try { Debug.Log($"[Jogging] Lauf exportiert: {TcxExport.SaveTo(ExportFolder, rec, Profile.playerName, true)}"); }
+                catch (System.Exception e) { Debug.LogWarning($"[Jogging] Export: {e.Message}"); }
+            }
             Debug.Log($"[Jogging] Lauf gespeichert ({Profile.playerName}): {s.distanceM:0} m, {s.seconds:0} s, {rec.samples.Count} Messpunkte, {s.source}");
             return unlocked;
         }
 
         public List<SessionSummary> SummariesOf(string runnerId) => Sessions.Summaries(runnerId);
+
+        /// <summary>Where exports go: "Jogging-Export" in Downloads (iPad/Android: in the exchange folder).</summary>
+        public static string ExportFolder => System.IO.Path.Combine(Core.DataPaths.Downloads, "Jogging-Export");
+
+        /// <summary>Every run of a runner as TCX into <see cref="ExportFolder"/> (runs already there are skipped). Returns (written, total).</summary>
+        public (int written, int total) ExportAll(ProfileData runner)
+        {
+            int written = 0, total = 0;
+            foreach (var s in Sessions.Summaries(runner.id))
+            {
+                var rec = Sessions.Load(runner.id, s.file);
+                if (rec == null) continue;
+                total++;
+                string path = System.IO.Path.Combine(ExportFolder, TcxExport.FileName(rec, runner.playerName) + ".tcx");
+                if (System.IO.File.Exists(path)) continue;
+                TcxExport.SaveTo(ExportFolder, rec, runner.playerName, true);
+                written++;
+            }
+            return (written, total);
+        }
 
         // ---- training plan ----
 

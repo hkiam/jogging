@@ -29,6 +29,7 @@ namespace Jogging.UI
             ps.CheckAchievements(null); // conditions on the logbook (e.g. streaks) may be met already
 
             UiControls.Label(p, Jogging.Core.Loc.F("Statistik · {0}", me.playerName), 34, 40f, -24f, 800f, 48f, UiTheme.TextPrimary, bold: true);
+            UiControls.Button(p, Jogging.Core.Loc.T("Export (Strava, Garmin …)"), () => ShowExport(), w - 400f, -28f, 360f, 50f, null, 19);
 
             // ---- left: periods
             float x = 40f, y = -96f;
@@ -257,8 +258,8 @@ namespace Jogging.UI
                 {
                     try
                     {
-                        string path = TcxExport.SaveToDownloads(rec, ps.Profile.playerName);
-                        exp.text = Jogging.Core.Loc.F("In „{0}“ gespeichert", Jogging.Core.DataPaths.ExchangeName);
+                        string path = TcxExport.SaveTo(ProfileService.ExportFolder, rec, ps.Profile.playerName, false);
+                        exp.text = Jogging.Core.Loc.F("In „{0}“ gespeichert", ExportFolderName());
                         Debug.Log($"[Jogging] Lauf exportiert: {path}");
                         Application.OpenURL("file://" + System.IO.Path.GetDirectoryName(path));
                     }

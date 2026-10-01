@@ -25,12 +25,13 @@ namespace Jogging.UI
 
         public static bool Enabled => AppSettings.Current.announcements;
 
-        private void Awake() { Current = this; CoachHints = 0; }
+        private void Awake() { Current = this; CoachHints = 0; InclineChanges = 0; Jogging.Locomotion.Treadmill.BeltControl.PulseOffset = 0f; }
         private void OnDestroy() { if (Current == this) Current = null; Stop(); }
 
         private void Start()
         {
             stats = FindFirstObjectByType<RunStats>();
+            router = FindFirstObjectByType<Jogging.Locomotion.LocomotionRouter>();
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
             audioSource.spatialBlend = 0f;
@@ -70,6 +71,11 @@ namespace Jogging.UI
         }
 
         private readonly PulseCoach coach = new PulseCoach();
+        private readonly PulseIncline pulseIncline = new PulseIncline();
+        private bool inclineAtLimit;
+        private Jogging.Locomotion.LocomotionRouter router;
+        /// <summary>Incline changes by heart rate in this run (tests).</summary>
+        public static int InclineChanges { get; private set; }
         /// <summary>Hints the pulse coach gave in this run (tests).</summary>
         public static int CoachHints { get; private set; }
 
@@ -106,6 +112,30 @@ namespace Jogging.UI
             var hrm = HeartRateMonitor.Current;
             int zone = hrm != null ? hrm.Zone : 0;
             var hint = coach.Step(stats.ElapsedSeconds, zone, target);
+
+            // incline by heart rate (profile, per runner): the app moves the incline instead of only saying
+            // so – when it sets the incline (route or workout) on a running treadmill
+            float? baseIncline = Jogging.Locomotion.Treadmill.BeltControl.BaseIncline;
+            bool steer = me != null && me.pulseIncline && target > 0 && baseIncline.HasValue && router != null && router.UsingTreadmill
+                         && Jogging.Locomotion.Treadmill.BeltControl.Mode != Jogging.Locomotion.Treadmill.ControlMode.Treadmill;
+            if (steer)
+            {
+                float step = Jogging.Locomotion.Treadmill.BeltControl.InclineStep;
+                var change = pulseIncline.Step(stats.ElapsedSeconds, zone, target, baseIncline.Value + pulseIncline.Offset,
+                    Jogging.Locomotion.Treadmill.BeltControl.MinIncline, Jogging.Locomotion.Treadmill.BeltControl.MaxIncline, step);
+                Jogging.Locomotion.Treadmill.BeltControl.PulseOffset = pulseIncline.Offset;
+                if (change == PulseIncline.Change.AtLimit) inclineAtLimit = true;
+                else if (change != PulseIncline.Change.None)
+                {
+                    inclineAtLimit = false;
+                    InclineChanges++;
+                    string text = PulseIncline.Text(change, step, zone, target);
+                    RaceMessages.Post(text);
+                    Say(text);
+                }
+                // the incline does the work: "ease off / faster" only once it can't go further
+                if ((hint == PulseCoach.Hint.Slower || hint == PulseCoach.Hint.Faster) && !inclineAtLimit) hint = PulseCoach.Hint.None;
+            }
             if (hint != PulseCoach.Hint.None)
             {
                 string text = PulseCoach.Text(hint, zone, target);

@@ -179,6 +179,12 @@ namespace Jogging.UI
         {
             var m = FindFirstObjectByType<StartMenuUI>(); if (m == null) return;
             if (page == "editor") m.ShowEditor(null); else if (page == "main") m.ShowEntryAlways(); else if (page == "settings") m.ShowSettingsPage(); else if (page == "profile") m.ShowProfile();
+            else if (page == "export") m.ShowExport(); else if (page == "import") m.ShowImport(null); else if (page == "stats") m.ShowStats();
+            else if (page == "gpxeditor") // the first GPX file in Downloads, opened in the editor
+            {
+                var c = Jogging.Route.RouteShare.FindFiles().Find(x => x.doc != null && Jogging.Route.GpxImport.IsGpx(x.doc.@params));
+                if (c != null) m.ShowEditor(c.doc);
+            }
         }
 
         /// <summary>Open the page (tests).</summary>

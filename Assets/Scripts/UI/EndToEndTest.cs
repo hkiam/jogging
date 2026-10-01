@@ -407,6 +407,26 @@ namespace Jogging.UI
             bool xmlOk;
             try { new System.Xml.XmlDocument().LoadXml(tcx); xmlOk = true; } catch { xmlOk = false; }
             Check(xmlOk && tcx.Contains("<Trackpoint>") && tcx.Contains("HeartRateBpm"), $"TCX-Export gültig ({tcx.Length / 1024} KB, mit Puls)");
+            // all runs into the export folder (in a test run inside the test data), a second time nothing new
+            var (written, total) = PS.ExportAll(PS.Profile);
+            int files = System.IO.Directory.Exists(ProfileService.ExportFolder) ? System.IO.Directory.GetFiles(ProfileService.ExportFolder, "*.tcx").Length : 0;
+            var (again, _) = PS.ExportAll(PS.Profile);
+            Check(total > 0 && written == total && files == total && again == 0, $"Alle Läufe exportiert ({written} von {total}, {files} Dateien, beim 2. Mal {again})");
+
+            // 11b. a GPX file in Downloads becomes a route: found, imported, with its own profile
+            var gpx = new System.Text.StringBuilder("<?xml version=\"1.0\"?><gpx version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\"><trk><name>E2E-Runde</name><trkseg>");
+            for (int i = 0; i <= 400; i++)
+            {
+                double a = i / 400.0 * 2 * System.Math.PI;
+                gpx.Append(System.FormattableString.Invariant($"<trkpt lat=\"{50 + 400 * System.Math.Sin(a) / 111320.0:0.0000000}\" lon=\"{8 + 400 * (1 - System.Math.Cos(a)) / 71560.0:0.0000000}\"><ele>{300 + 20 * System.Math.Sin(a / 2):0.0}</ele></trkpt>"));
+            }
+            gpx.Append("</trkseg></trk></gpx>");
+            System.IO.File.WriteAllText(System.IO.Path.Combine(Jogging.Core.DataPaths.Downloads, "e2e-runde.gpx"), gpx.ToString());
+            var cand = RouteShare.FindFiles().FirstOrDefault(c => c.doc != null && c.doc.meta.name == "E2E-Runde");
+            Check(cand != null && cand.importable && GpxImport.IsGpx(cand.doc.@params) && cand.doc.@params.loop
+                  && Mathf.Abs(cand.doc.profile.ascentM - 20f) < 3f, $"GPX-Datei gefunden ({(cand != null ? $"{cand.doc.@params.lengthKm:0.00} km, ↑{cand.doc.profile.ascentM:0} m" : "fehlt")})");
+            if (cand != null) RouteShare.Import(cand.doc);
+            Check(RouteStore.LoadAll().Any(r => r.meta.name == "E2E-Runde" && GpxImport.IsGpx(r.@params)), "GPX-Strecke übernommen");
             Check(MacBleBridgeTransport.SimViolationsTotal == 0, "Zusatzteil ohne Verstoß (alle Szenen)");
         }
 

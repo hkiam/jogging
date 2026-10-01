@@ -40,22 +40,45 @@ namespace Jogging.Locomotion.Treadmill
         /// <summary>Workout targets (null = no workout running).</summary>
         public static TargetProvider Workout { get; set; }
 
+        /// <summary>
+        /// Incline % on top of the route's / workout's (incline by heart rate, <see cref="Training.PulseIncline"/>);
+        /// 0 = none. Reset with every run.
+        /// </summary>
+        public static float PulseOffset { get; set; }
+
+        /// <summary>The incline the route / workout asked for last (without <see cref="PulseOffset"/>); null = none.</summary>
+        public static float? BaseIncline { get; private set; }
+
         /// <summary>Targets for the current mode; false = the app doesn't want to change anything.</summary>
         public static bool Targets(float routeGradePercent, out float? inclinePercent, out float? speedKmh)
         {
             inclinePercent = speedKmh = null;
+            bool want;
             switch (Mode)
             {
                 case ControlMode.Route:
                     // downhill only on a treadmill that can decline and where the runner allowed it
                     inclinePercent = (routeGradePercent > 0f || DeclineAllowed ? routeGradePercent : 0f) * RouteGain;
-                    return true;
+                    want = true;
+                    break;
                 case ControlMode.Workout:
-                    return Workout != null && Workout(out inclinePercent, out speedKmh);
+                    want = Workout != null && Workout(out inclinePercent, out speedKmh);
+                    break;
                 default:
+                    BaseIncline = null;
                     return false; // the runner controls the belt
             }
+            BaseIncline = inclinePercent;
+            if (want && inclinePercent.HasValue && PulseOffset != 0f)
+                inclinePercent = System.Math.Clamp(inclinePercent.Value + PulseOffset, MinIncline, MaxIncline);
+            return want;
         }
+
+        /// <summary>The app's incline range on the connected treadmill (its profile).</summary>
+        public static float MinIncline { get; private set; } = 0f;
+        public static float MaxIncline { get; private set; } = 12f;
+        /// <summary>% per step the belt takes (1 if not known).</summary>
+        public static float InclineStep { get; private set; } = 1f;
 
         /// <summary>
         /// True when no run is in progress (no session, before the start, finished, discarded): the app
@@ -81,6 +104,8 @@ namespace Jogging.Locomotion.Treadmill
             l.MaxSpeedKmh = p.maxSpeed;
             if (p.inclineStep > 0f) { l.InclineResolution = p.inclineStep; l.MaxInclineStep = System.Math.Max(1f, p.inclineStep); }
             DeclineAllowed = p.decline;
+            MinIncline = l.MinIncline; MaxIncline = l.MaxIncline;
+            InclineStep = p.inclineStep > 0f ? System.Math.Max(1f, p.inclineStep) : 1f;
         }
 
         /// <summary>The belt told its range (FitShow SYS_INFO, FTMS 2AD4/2AD5): remember it with the treadmill.</summary>

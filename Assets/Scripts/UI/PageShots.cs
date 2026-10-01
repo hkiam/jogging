@@ -26,7 +26,10 @@ namespace Jogging.UI
         {
             Directory.CreateDirectory(dir);
             yield return new WaitForSecondsRealtime(25f);
-            foreach (var pg in new[] { "main", "editor", "settings", "profile" })
+            var pages = new[] { "main", "editor", "settings", "profile" };
+            var a = Jogging.Core.Args.All; // -pages export,import,… : other pages (checks)
+            for (int i = 0; i < a.Length - 1; i++) if (a[i] == "-pages") pages = a[i + 1].Split(',');
+            foreach (var pg in pages)
             {
                 StartMenuUI.OpenPageForTest(pg);
                 yield return new WaitForSecondsRealtime(1.5f);

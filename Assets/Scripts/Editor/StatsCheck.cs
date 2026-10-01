@@ -122,6 +122,15 @@ namespace Jogging.EditorTools
             }
             catch (Exception e) { fails.Add("TCX ist kein gültiges XML: " + e.Message); }
 
+            // TCX altitude: follows the incline (1 km at 5 % → +50 m), never below the start height on a flat run
+            var climb = new SessionRecord();
+            climb.summary.start = "2026-09-24T10:00:00Z";
+            for (int i = 0; i <= 100; i++) climb.samples.Add(new SessionSample { t = i, distM = i * 10f, kmh = 36f, incline = 5f });
+            var alts = new List<float>();
+            foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(TcxExport.ToTcx(climb), "<AltitudeMeters>([0-9.]+)</AltitudeMeters>"))
+                alts.Add(float.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture));
+            Ok(alts.Count == 101 && Mathf.Abs(alts[100] - alts[0] - 50f) < 0.5f, $"TCX-Höhe: {(alts.Count > 0 ? alts[alts.Count - 1] - alts[0] : -1):0.0} m statt 50 m");
+
             // Achievements from the logbook
             var p = new ProfileData { totalRuns = 3, totalDistanceMeters = 16000f, totalTimeSeconds = 5700f };
             var runs = new List<SessionSummary>

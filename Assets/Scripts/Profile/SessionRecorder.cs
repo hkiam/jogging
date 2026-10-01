@@ -90,6 +90,9 @@ namespace Jogging.Profile
 
         public void FinishNow() => TryRecord();
 
+        /// <summary>This run as recorded (finish screen: export); null while running or if it was too short to count.</summary>
+        public SessionRecord LastRecord { get; private set; }
+
         /// <summary>The runner discards this run: nothing is recorded, not even on scene reload or quit.</summary>
         public void Discard()
         {
@@ -109,7 +112,7 @@ namespace Jogging.Profile
             if (rec == null) return;
             recorded = true;
             var s = rec.summary;
-            LastAvgHr = s.avgHr; LastMaxHr = s.maxHr; LastKcal = s.kcal;
+            LastAvgHr = s.avgHr; LastMaxHr = s.maxHr; LastKcal = s.kcal; LastRecord = rec;
             NewAchievements = ProfileService.Instance.RecordSession(rec); // also removes the active runner's checkpoint
             DropCheckpoint(); // (in case the active runner changed meanwhile)
         }

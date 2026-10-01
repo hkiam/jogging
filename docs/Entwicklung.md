@@ -167,6 +167,7 @@ Windows-Rechner getestet.**
 | `-timeofday <h>`, `-lightpollution <0..1>`, `-moonage <Tage>` | Himmel: Uhrzeit, Licht der Orte, Mondalter (0 Neumond … 14,8 Vollmond; sonst das heutige) |
 | `-waysideshots <ordner> -beltsim -timescale 6` | Testbilder des Wegrands: läuft die Strecke und fotografiert je Objektart das erste Vorkommen |
 | `-animaltest` | je ein Hase, Kaninchen, Fuchs und zwei Hirsche gleich am Start; mit `-skyshots` zusätzlich Nahaufnahmen `tier-*.png` |
+| `-pageshots <ordner> [-pages stats,export,import,gpxeditor,profile,…]` | Bilder der Menüseiten (Standard: main, editor, settings, profile), danach beendet sich die App; `gpxeditor` öffnet die erste GPX-Datei aus Downloads im Editor |
 | `-nowayside` | ohne Wegrand-Objekte (Vergleich der Bildrate) |
 | `-skyshots <ordner>` | Testbilder des Himmels (15 Stimmungen × 2 Blickrichtungen), danach beendet sich die App |
 | `-fps` | nur die Bildrate im Log (`[FPS] Ø … · 1% low …`) |

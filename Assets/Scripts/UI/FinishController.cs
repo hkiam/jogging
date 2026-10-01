@@ -104,6 +104,13 @@ namespace Jogging.UI
                     Jogging.Core.Loc.F("Höhenmeter  +{0}\n", Jogging.Core.Units.FmtElev(gain)) +
                     Jogging.Core.Loc.F("Ø Tempo     {0}   ·   {1}", Jogging.Core.Units.FmtSpeed(kmh), RunnerStats.Pace(dist, secs)) + pulse + record + unlocked;
 
+            if (exportRun != null) // a run too short to count is not in the logbook – nothing to export
+            {
+                bool auto = Jogging.Core.AppSettings.Current.autoExport;
+                exportRun.gameObject.SetActive(recorder != null && recorder.LastRecord != null);
+                exportLabel.text = Jogging.Core.Loc.T(auto ? "✓ exportiert" : "Export (TCX)");
+            }
+
             if (saveRoute != null)
             {
                 bool discovery = Jogging.Route.RoutePresets.IsUnsavedFreeRun(route);
@@ -240,9 +247,32 @@ namespace Jogging.UI
                     Jogging.World.RouteRuntime.Selected = Jogging.Route.RoutePresets.AfterRun(Jogging.World.RouteRuntime.Current);
                     Jogging.World.SceneReload.Now(); // frees the old landscape first
                 });
-            Place(done.GetComponent<RectTransform>(), new Vector2(0f, 30f), new Vector2(360f, 48f));
+            Place(done.GetComponent<RectTransform>(), new Vector2(-95f, 30f), new Vector2(170f, 48f));
+
+            // The run as TCX for Strava, Garmin & co. (already done when automatic export is on)
+            exportRun = UiTheme.Button(panel.transform, "Export (TCX)", ExportRun);
+            Place(exportRun.GetComponent<RectTransform>(), new Vector2(95f, 30f), new Vector2(170f, 48f));
+            exportLabel = exportRun.GetComponentInChildren<Text>();
 
             overlay.SetActive(false);
+        }
+
+        private Button exportRun;
+        private Text exportLabel;
+
+        private void ExportRun()
+        {
+            var ps = Jogging.Profile.ProfileService.Instance;
+            var rec = recorder != null ? recorder.LastRecord : null;
+            if (rec == null) { exportLabel.text = Jogging.Core.Loc.T("Kein Lauf"); return; }
+            try
+            {
+                string path = Jogging.Profile.TcxExport.SaveTo(Jogging.Profile.ProfileService.ExportFolder, rec, ps.Profile.playerName, true);
+                exportLabel.text = Jogging.Core.Loc.T("✓ exportiert");
+                Debug.Log($"[Jogging] Lauf exportiert: {path}");
+                if (!Jogging.Core.Platform.IsMobile) Application.OpenURL("file://" + Jogging.Profile.ProfileService.ExportFolder);
+            }
+            catch (System.Exception e) { exportLabel.text = Jogging.Core.Loc.T("Export fehlgeschlagen"); Debug.LogWarning($"[Jogging] Export: {e.Message}"); }
         }
 
         private void SaveRoute()

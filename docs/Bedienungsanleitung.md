@@ -54,6 +54,13 @@ Solange die App läuft, geht der Bildschirm nicht aus und der Rechner oder das T
 - **Importieren**: Code aus der Zwischenablage einfügen – oder **„QR-Bild lesen“**: die App sucht in den
   neuesten Bildern in „Downloads“ und auf dem Schreibtisch nach einem Strecken-QR-Code (ein Foto oder
   Bildschirmfoto der Teilen-Seite, oder das „Strecke-….png“).
+- **Echte Strecke nachlaufen (GPX)**: Exportiere eine Runde als GPX-Datei – aus Strava, Garmin Connect, Komoot,
+  Outdooractive & Co. – und lege sie in „Downloads“ oder auf den Schreibtisch (Tablet: „Austausch“). Unter
+  **Importieren** erscheint sie mit Länge und Höhenmetern → **Übernehmen**. Länge, Höhenprofil und ob es eine Runde
+  ist, kommen aus der Datei (die Höhen geglättet, GPS-Höhen rauschen); wie kurvig sie ist, wird nachempfunden – die
+  Landschaft ist erfunden, eine echte Karte gibt es nicht. Die Jahreszeit ist die der Aufzeichnung; Landschaft,
+  Wetter und Tageszeit kannst du danach unter **Bearbeiten** frei wählen. Steiler als dein Laufband kann (meist
+  12 %) wird es nicht.
 - Auf gespeicherten Strecken läuft **dein Geist** mit – dein bester Lauf auf dieser Strecke, als durchscheinende,
   bläuliche Figur neben dir. Rechts oben steht, wie weit du vorn (−) oder hinten (+) liegst. Mit **G** ausschalten, oder im Profil.
 
@@ -97,6 +104,15 @@ gehen nicht (iPad, Mac und die meisten Tablets haben kein ANT+). Meldet der Gurt
 oder als eigener Pulsdienst, FitShow-Bänder in ihrer Statusmeldung), zeigt die App ihn mit „(Hand)“ an –
 aber nur, solange kein Gurt liefert; der Gurt ist genauer und misst auch ohne Hände an den Griffen.
 
+**Pulscoach und Steigung nach Puls** (im **Profil**): Der Pulscoach sagt Bescheid, wenn dein Puls länger als 20 s
+außerhalb der Zielzone liegt – nur in Workouts mit Pulszonen, oder immer mit einer Zielzone, die du wählst.
+Mit **Steigung nach Puls** regelt die App stattdessen selbst nach: Liegt der Puls 30 s über der Zielzone, nimmt
+sie die Steigung um einen Schritt (1 %, beim F37 2 %) zurück, darunter legt sie einen drauf – dann wartet sie
+eine Minute, bis der Puls reagiert hat. Höchstens 4 % mehr als die Strecke, nie über die Grenzen deines Bands.
+Das geht nur, wenn die App die Steigung stellt (Einstellungen → Steuerung: „Strecke stellt die Steigung“) und ein
+Laufband verbunden ist; das Tempo bleibt immer bei dir. Ist die Steigung schon ganz unten, sagt der Coach
+wieder „Etwas ruhiger“.
+
 **Andere Laufbänder und Sensoren**
 
 | Protokoll | Typische Bänder | Tempo & Strecke | Steigung | Steuert die App? |
@@ -131,7 +147,12 @@ der F37; die anderen folgen den veröffentlichten Protokollen.
 - Heute, Woche, Monat, Jahr, Gesamt; Bestwerte (längster Lauf, schnellste 5 km …); Wochenziele.
 - **Familie diese Woche** – wer am meisten gelaufen ist (die Karte mit „Nr. 1 diese Woche“).
 - **Logbuch**: jeden Lauf anklicken → Tempo, Puls und Steigung als Kurve. Dort kannst du einen Lauf auch
-  löschen oder als **TCX** für Strava/Garmin exportieren.
+  löschen oder als **TCX** exportieren.
+- **Export (Strava, Garmin …)** oben rechts: alle Läufe auf einmal als TCX-Dateien nach
+  „Downloads › Jogging-Export“ (schon exportierte werden übersprungen), und auf Wunsch **nach jedem Lauf
+  automatisch**. Die Dateien enthalten Zeit, Strecke, Tempo, Puls und die gelaufenen Höhenmeter; hochladen bei
+  Strava (＋ → Datei hochladen), Garmin Connect (Importieren → Daten), Runalyze, Intervals.icu u. a. Auch der
+  Zielbildschirm hat einen Knopf **Export (TCX)**.
 - **Verlauf (12 Wochen)** als Balken, **Erfolge** (24 Stück).
 
 ## 7. Profil und Einstellungen

@@ -130,7 +130,7 @@ namespace Jogging.Route
             // 1) Designed elevation: climbs as smooth steps + rolling waves.
             var climbs = new List<RouteClimb>(p.climbs ?? new List<RouteClimb>());
             if (p.endless) climbs = EndlessClimbs(L, p, rng);
-            if (loop) AddLoopCompensation(climbs, L, maxG);
+            if (loop && !GpxImport.IsGpx(p)) AddLoopCompensation(climbs, L, maxG);
 
             float[] wl = { 620f, 240f, 95f };
             float[] ph = { R(rng) * 6.283f, R(rng) * 6.283f, R(rng) * 6.283f };
@@ -139,6 +139,9 @@ namespace Jogging.Route
             float flat = Mathf.Max(0f, p.flatStartEndM);
 
             var e = new float[n];
+            if (GpxImport.IsGpx(p)) // a real route: its own heights (already smoothed)
+                for (int i = 0; i < n; i++) e[i] = GpxImport.HeightAt(p, i * ProfileStep);
+            else
             for (int i = 0; i < n; i++)
             {
                 float s = i * ProfileStep;

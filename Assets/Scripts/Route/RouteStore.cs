@@ -94,6 +94,10 @@ namespace Jogging.Route
             var p = doc.@params;
             p.lengthKm = float.IsNaN(p.lengthKm) ? 5f : Math.Clamp(p.lengthKm, 0.5f, 100f);
             p.climbs ??= new List<RouteClimb>();
+            p.gpxHeightsDm ??= new int[0];
+            if (p.gpxHeightsDm.Length > 20001) Array.Resize(ref p.gpxHeightsDm, 20001); // 100 km at 5 m
+            p.gpxStepM = float.IsNaN(p.gpxStepM) ? 20f : Math.Clamp(p.gpxStepM, 5f, 100f);
+            if (p.source == "gpx" && p.gpxHeightsDm.Length >= 2) p.lengthKm = Math.Clamp((p.gpxHeightsDm.Length - 1) * p.gpxStepM / 1000f, 0.5f, 100f);
             if (p.climbs.Count > MaxClimbs) p.climbs.RemoveRange(MaxClimbs, p.climbs.Count - MaxClimbs);
             doc.edits ??= new List<RouteEdit>();
             if (doc.edits.Count > MaxEdits) doc.edits.RemoveRange(MaxEdits, doc.edits.Count - MaxEdits);

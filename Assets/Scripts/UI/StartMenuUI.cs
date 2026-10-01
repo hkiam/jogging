@@ -206,6 +206,16 @@ namespace Jogging.UI
             }
             y -= 52f * ((ids.Length + 3) / 4) + 20f; // rows of templates
 
+            bool gpx = GpxImport.IsGpx(prm);
+            if (gpx) // a real route: length, form and profile come from the GPX file
+            {
+                var fixedNote = UiControls.Label(p, Jogging.Core.Loc.F("Aus einer GPX-Datei: Länge, Höhenprofil und Form ({0}) stehen fest. Landschaft und Stimmung kannst du frei wählen.",
+                    Jogging.Core.Loc.T(prm.loop ? "Rundkurs" : "Strecke (A → B)")), 20, x, y, w, 120f, UiTheme.TextMuted, TextAnchor.UpperLeft);
+                fixedNote.horizontalOverflow = HorizontalWrapMode.Wrap;
+                y -= 110f;
+            }
+            else
+            {
             UiControls.SliderRow(p, Jogging.Core.Loc.T("Länge"), 1f, 21f, prm.lengthKm, false, v => Jogging.Core.Units.FmtDist(Jogging.Core.Units.RoundKm(v, 0.5f) * 1000f), v => { prm.lengthKm = Jogging.Core.Units.RoundKm(v, 0.5f); Changed(); }, x, y, w); y -= 52f;
             UiControls.Toggle(p, Jogging.Core.Loc.T("Form"), Jogging.Core.Loc.T("Rundkurs"), Jogging.Core.Loc.T("Strecke (A → B)"), prm.loop, v => { prm.loop = v; Changed(); }, x, y, w); y -= 58f;
             UiControls.SliderRow(p, Jogging.Core.Loc.T("Kurvigkeit"), 0f, 1f, prm.curviness, false, v => Word(v, "gerade", "sanft", "kurvig", "verschlungen"), v => { prm.curviness = v; Changed(); }, x, y, w); y -= 62f;
@@ -216,6 +226,7 @@ namespace Jogging.UI
 
             UiControls.SliderRow(p, Jogging.Core.Loc.T("Welligkeit"), 0f, 1f, prm.rolling, false, v => Word(v, "flach", "leicht", "wellig", Jogging.Core.Loc.T("sehr wellig")), v => { prm.rolling = v; Changed(); }, x, y, w); y -= 52f;
             UiControls.SliderRow(p, Jogging.Core.Loc.T("Max. Steigung"), 5f, 12f, prm.maxGrade * 100f, true, v => $"{v:0} %", v => { prm.maxGrade = v / 100f; Changed(); }, x, y, w); y -= 62f;
+            }
 
             UiControls.Label(p, "Variante", 20, x, y, 210f, 44f, UiTheme.TextMuted);
             var seedLabel = UiControls.Label(p, $"#{edit.generator.seed}", 22, x + 215f, y, 200f, 44f, UiTheme.TextPrimary, bold: true);
@@ -270,6 +281,14 @@ namespace Jogging.UI
         {
             var t = RoutePresets.Create(id, edit.generator.seed);
             string name = nameField != null ? nameField.text : edit.meta.name;
+            var old = edit.@params;
+            if (GpxImport.IsGpx(old)) // a GPX route keeps its course: the template only sets landscape and mood
+            {
+                var q = t.@params;
+                q.source = old.source; q.gpxStepM = old.gpxStepM; q.gpxHeightsDm = old.gpxHeightsDm;
+                q.lengthKm = old.lengthKm; q.loop = old.loop; q.endless = false; q.curviness = old.curviness;
+                q.climbs = new List<RouteClimb>(); q.rolling = 0f; q.maxGrade = old.maxGrade; q.relief = old.relief;
+            }
             edit.@params = t.@params;
             edit.meta.name = string.IsNullOrWhiteSpace(name) || name == "Neue Strecke" || name == Jogging.Core.Loc.T("Neue Strecke") ? t.meta.name : name;
             ReadClimbs();
@@ -282,6 +301,7 @@ namespace Jogging.UI
             var prm = edit.@params;
             prm.endless = false;
             prm.climbs = new List<RouteClimb>();
+            if (GpxImport.IsGpx(prm)) climbCount = 0; // its own profile
             for (int i = 0; i < climbCount; i++)
                 prm.climbs.Add(new RouteClimb { atKm = prm.lengthKm * (i + 1f) / (climbCount + 1f), heightM = climbHeight, grade = climbGrade });
             RouteGenerator.Generate(edit);
@@ -472,7 +492,7 @@ namespace Jogging.UI
             }
 
             // From files in Downloads / on the Desktop.
-            UiControls.Label(p, (Jogging.Core.Platform.IsMobile ? ".jogroute-Dateien in „Austausch“" : ".jogroute-Dateien in Downloads und auf dem Schreibtisch"), 22, 40f, -262f, 900f, 36f, UiTheme.TextMuted, bold: true);
+            UiControls.Label(p, (Jogging.Core.Platform.IsMobile ? ".jogroute- und GPX-Dateien in „Austausch“" : ".jogroute- und GPX-Dateien in Downloads und auf dem Schreibtisch"), 22, 40f, -262f, 900f, 36f, UiTheme.TextMuted, bold: true);
             var files = RouteShare.FindFiles();
             if (files.Count == 0) UiControls.Label(p, "Keine gefunden.", 20, 40f, -302f, 800f, 36f, UiTheme.TextMuted);
             float y = -302f;
@@ -481,6 +501,12 @@ namespace Jogging.UI
                 var c = files[i];
                 var row = UiTheme.Panel(p, UiTheme.PanelSoft);
                 UiControls.Place(row.GetComponent<RectTransform>(), 40f, y, 1240f, 64f);
+                if (c.doc == null) // a GPX file that can't be used: say why
+                {
+                    UiControls.Label(row.transform, $"{System.IO.Path.GetFileName(c.file)} · {c.error}", 20, 20f, -12f, 1180f, 40f, UiTheme.Danger);
+                    y -= 74f;
+                    continue;
+                }
                 UiControls.Label(row.transform, $"{c.doc.meta.name} · {Jogging.Core.Units.FmtDist(c.doc.@params.lengthKm * 1000f)} · ↑{Jogging.Core.Units.FmtElev(c.doc.profile.ascentM)} · {c.status}",
                     20, 20f, -12f, 920f, 40f, c.importable ? UiTheme.TextPrimary : UiTheme.TextMuted);
                 if (c.importable)

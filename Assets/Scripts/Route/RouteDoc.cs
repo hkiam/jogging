@@ -71,6 +71,11 @@ namespace Jogging.Route
     {
         // Course
         public float lengthKm = 5f;
+
+        // From a GPX file (Route/GpxImport): the real elevation profile instead of climbs + rolling
+        public string source = "";          // "" generated | "gpx"
+        public float gpxStepM = 20f;
+        public int[] gpxHeightsDm = new int[0]; // height every gpxStepM, decimetres relative to the start
         public bool loop = true;
         public bool endless;                // free run: no finish line (open course, very long)
         public float curviness = 0.5f;      // 0 straight … 1 winding

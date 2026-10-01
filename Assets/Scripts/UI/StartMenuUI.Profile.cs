@@ -17,7 +17,7 @@ namespace Jogging.UI
         private void ShowProfile()
         {
             const float w = 1000f;
-            var p = NewPage(w, 1016f);
+            var p = NewPage(w, 1056f);
             SetDim(RunnerDim);
             var ps = ProfileService.Instance;
             if (ps == null || !ps.HasRunners) { ShowEntry(); return; }
@@ -86,14 +86,18 @@ namespace Jogging.UI
             int coach = Mathf.Clamp(me.pulseCoach, -1, 5);
             string CoachText() => coach < 0 ? Jogging.Core.Loc.T("aus") : coach == 0 ? Jogging.Core.Loc.T("nur in Workouts") : Jogging.Core.Loc.F("immer · Ziel Zone {0}", coach);
             UiControls.Stepper(p, Jogging.Core.Loc.T("Pulscoach"), CoachText, () => coach = Mathf.Max(-1, coach - 1), () => coach = Mathf.Min(5, coach + 1), 50f, -718f, 640f);
-            UiControls.Label(p, "sagt Bescheid, wenn der Puls länger aus der Zielzone ist", 16, 720f, -716f, w - 770f, 44f, UiTheme.TextMuted);
+            // Incline by heart rate: the app moves the incline to keep that zone (when it sets the incline)
+            bool pulseIncline = me.pulseIncline;
+            UiControls.Toggle(p, Jogging.Core.Loc.T("Steigung nach Puls"), Jogging.Core.Loc.T("An"), Jogging.Core.Loc.T("Aus"), pulseIncline, v => pulseIncline = v, 50f, -774f, 640f);
+            UiControls.Label(p, "hält dich in der Zielzone: die App stellt die Steigung nach (wenn sie die Steigung stellt)", 16, 720f, -772f, w - 770f, 48f, UiTheme.TextMuted).horizontalOverflow = HorizontalWrapMode.Wrap;
+            UiControls.Label(p, "sagt Bescheid, wenn der Puls länger aus der Zielzone ist", 16, 720f, -716f, w - 770f, 44f, UiTheme.TextMuted).horizontalOverflow = HorizontalWrapMode.Wrap;
 
             // The runner's own heart rate strap (paired on first connect; "Anderer Gurt" takes the next free one)
-            UiControls.Label(p, "Pulsgurt", 20, 50f, -774f, 210f, 44f, UiTheme.TextMuted);
+            UiControls.Label(p, "Pulsgurt", 20, 50f, -830f, 210f, 44f, UiTheme.TextMuted);
             UiControls.Label(p, string.IsNullOrEmpty(me.hrDeviceName) && string.IsNullOrEmpty(me.hrDeviceId) ? "noch keiner – der erste, der sich verbindet"
-                               : (string.IsNullOrEmpty(me.hrDeviceName) ? "Pulsgurt" : me.hrDeviceName), 20, 260f, -774f, 400f, 44f, UiTheme.TextPrimary);
+                               : (string.IsNullOrEmpty(me.hrDeviceName) ? "Pulsgurt" : me.hrDeviceName), 20, 260f, -830f, 400f, 44f, UiTheme.TextPrimary);
             UiControls.Button(p, Jogging.Core.Loc.T("Anderer Gurt"), () => { PairOtherStrap(FindFirstObjectByType<Jogging.Locomotion.Treadmill.MacBleBridgeTransport>()); ShowProfile(); },
-                                 w - 290f, -772f, 240f, 44f, null, 19);
+                                 w - 290f, -828f, 240f, 44f, null, 19);
 
             UiControls.Button(p, "Speichern", () =>
             {
@@ -106,10 +110,11 @@ namespace Jogging.UI
                 me.weekGoalMinutes = gMin == Challenges.DefaultMinutes ? 0 : gMin;
                 me.ghostOff = !ghostOn;
                 me.pulseCoach = coach;
+                me.pulseIncline = pulseIncline;
                 ps.SaveActive(figChanged);
                 ShowHome();
-            }, 50f, -846f, 300f, 60f, UiTheme.Success, 24);
-            UiControls.Button(p, Jogging.Core.Loc.T("Abbrechen"), () => { if (player != null) player.Show(me.figureModel); ShowHome(); }, 370f, -846f, 260f, 60f);
+            }, 50f, -902f, 300f, 60f, UiTheme.Success, 24);
+            UiControls.Button(p, Jogging.Core.Loc.T("Abbrechen"), () => { if (player != null) player.Show(me.figureModel); ShowHome(); }, 370f, -902f, 260f, 60f);
 
             // Delete (second click confirms)
             Text del = null;
@@ -119,7 +124,7 @@ namespace Jogging.UI
                 if (!armed) { armed = true; del.text = Jogging.Core.Loc.F("Wirklich {0} mit allen Läufen löschen?", me.playerName); return; }
                 ps.DeleteRunner(me.id);
                 ShowEntry();
-            }, 50f, -928f, w - 100f, 52f, UiTheme.Danger, 20).GetComponentInChildren<Text>();
+            }, 50f, -978f, w - 100f, 52f, UiTheme.Danger, 20).GetComponentInChildren<Text>();
         }
     }
 }
