@@ -1,0 +1,8 @@
+"RABBIT - Realistic 3D Model (DEMO FREE)" by WildMesh 3D (https://sketchfab.com/WildMesh_3D)
+Source: https://sketchfab.com/3d-models/rabbit-realistic-3d-model-demo-free-d70284ea0d7644988bdcd327c3ffb59a
+Licence: CC-BY-NC-4.0 – https://creativecommons.org/licenses/by-nc/4.0/
+Converted from GLB to FBX (Blender, Tools/animals/glb2fbx.py) and scaled to real-world size in the Jogging app; materials rebuilt
+from the model's own textures (URP). No other changes.
+
+NON-COMMERCIAL: not covered by the project's MIT licence. Free use only; replace this model for any
+commercial use.

@@ -1,0 +1,18 @@
+[
+ {
+  "name": "M_Fox",
+  "base": "fox_0_tex.png",
+  "normal": null,
+  "alpha": false,
+  "cutoff": 0.5,
+  "gloss": 0.0
+ },
+ {
+  "name": "M_Fox_Fur",
+  "base": "fox_1_tex.png",
+  "normal": null,
+  "alpha": true,
+  "cutoff": 0.3276586988100597,
+  "gloss": 0.0
+ }
+]

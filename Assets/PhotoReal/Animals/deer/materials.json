@@ -1,0 +1,18 @@
+[
+ {
+  "name": "Deer_Antler",
+  "base": "deer_0_tex.png",
+  "normal": "deer_1_tex.png",
+  "alpha": false,
+  "cutoff": 0.5,
+  "gloss": 0.21147425268811282
+ },
+ {
+  "name": "Deer_M",
+  "base": "deer_2_tex.png",
+  "normal": null,
+  "alpha": false,
+  "cutoff": 0.5,
+  "gloss": 0.0
+ }
+]

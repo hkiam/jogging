@@ -1,0 +1,5 @@
+"Animated Rabbit – 3D Animal Model" by AnimalMesh 3D (https://sketchfab.com/AnimalMesh3D)
+Source: https://sketchfab.com/3d-models/animated-rabbit-3d-animal-model-244017d76f804d6eaa0dd2c33bcff50f
+Licence: CC-BY-4.0 – https://creativecommons.org/licenses/by/4.0/
+Converted from GLB to FBX (Blender, Tools/animals/glb2fbx.py) and scaled to real-world size in the Jogging app; materials rebuilt
+from the model's own textures (URP). No other changes.

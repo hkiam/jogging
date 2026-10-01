@@ -766,6 +766,10 @@ namespace Jogging.Core
             ["sagt Bescheid, wenn der Puls länger aus der Zielzone ist"] = "speaks up when your pulse stays out of the target zone",
             ["aus"] = "off",
             ["Bluetooth-Helfer fehlt (JoggingBleBridge.exe)"] = "Bluetooth helper missing (JoggingBleBridge.exe)",
+            ["Hirsch"] = "deer",
+            ["Hase"] = "hare",
+            ["Kaninchen"] = "rabbit",
+            ["Fuchs"] = "fox",
         };
     }
 }

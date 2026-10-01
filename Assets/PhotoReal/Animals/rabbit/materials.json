@@ -1,0 +1,10 @@
+[
+ {
+  "name": "M_Rabbit",
+  "base": "rabbit_0_tex.png",
+  "normal": null,
+  "alpha": false,
+  "cutoff": 0.5,
+  "gloss": 0.0
+ }
+]

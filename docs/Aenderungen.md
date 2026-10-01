@@ -4,6 +4,16 @@
 
 (nichts)
 
+## Vierzehnter Merge (01.10.2026) – Tiere
+
+- **Tiere** (World/Animals): Rothirsche in kleinen Gruppen am Waldrand, Feldhasen im Offenland (flüchten bei
+  Annäherung), Kaninchen am Waldrand, höchstens ein Fuchs, der vor dem Läufer den Weg kreuzt. Je Strecke aus dem
+  Seed geplant, sparsam; Dämmerung mehr, Mittag und Regen weniger, Grafik „minimal“ halbiert. Modelle von Sketchfab
+  (AnimalMesh 3D: CC BY; WildMesh 3D: CC BY-NC – nur nicht-kommerziell, siehe THIRD_PARTY_NOTICES), umgewandelt mit
+  `Tools/animals/glb2fbx.py` (Blender), aufbereitet mit Jogging → Build → Tiere aufbereiten (echte Größe nach Name,
+  Blickrichtung, Mesh-LODs, URP-Materialien aus den Texturen im GLB – die Sketchfab-Modelle speichern die Farbe als
+  Specular-Glossiness, die Blender beim Umwandeln verliert).
+
 ## Dreizehnter Merge (30.09.2026) – Windows-Version, Release 1.1
 
 - **Windows-Version**: `BuildTools.BuildWindowsBatch` (am Mac gebaut, Mono), `Builds/Windows/` mit der neuen

@@ -35,7 +35,7 @@ It started as a family project: one treadmill, several runners, a shared weekly 
 |---|---|
 | 🌍 **Endless, generated worlds** | Infinite MapMagic 2 terrain, a trail shaped to the route's elevation profile, forests, meadows, lakes, streams with little bridges, four seasons. |
 | 🌦️ **Real sky** | Sun and moon at their true position (50° N) with today's moon phase, four cloud layers drifting at their own speed, cloud shadows sweeping across the land, stars and the Milky Way far from towns, ground fog at dawn, rain and snow. |
-| 🪵 **A believable trail** | Asphalt through the village, gravel, earth, needle-covered forest paths, meadow tracks – matching the surroundings. Side paths, signposts, benches, hunting stands, log piles, wayside crosses, chapels, crows that fly up as you come. Sparse, like a real forest. |
+| 🪵 **A believable trail** | Asphalt through the village, gravel, earth, needle-covered forest paths, meadow tracks – matching the surroundings. Side paths, signposts, benches, hunting stands, log piles, wayside crosses, chapels, crows that fly up as you come. Now and then a deer at the forest edge, a hare that bolts, a fox crossing at dusk. Sparse, like a real forest. |
 | 🏃 **You're not alone** | Fellow runners that match your pace, a rival just ahead to chase, overtakes, spectators, and a see-through ghost of your best run. |
 | ⛰️ **The treadmill follows the hills** | FitShow (e.g. Sportstech F37) and standard FTMS treadmills: incline from the route, speed from workouts (opt-in). Every command passes one safety layer. |
 | ❤️ **Heart rate** | Any Bluetooth heart-rate strap, or the treadmill's hand sensors; zones on screen and in the logbook. |
@@ -204,6 +204,8 @@ FitShow or any treadmill maker.
 - Trees and plants: [Idyllic Fantasy Nature](https://assetstore.unity.com/packages/3d/environments/fantasy/idyllic-fantasy-nature-260042) by Edenity (Unity Asset Store, not included)
 - Figures: [Microsoft Rocketbox Avatar Library](https://github.com/microsoft/Microsoft-Rocketbox) (MIT)
 - Wayside models and trail textures: [Poly Haven](https://polyhaven.com) (CC0)
+- Animals: hare by [AnimalMesh 3D](https://sketchfab.com/AnimalMesh3D) (CC BY 4.0); red deer, rabbit and fox by
+  [WildMesh 3D](https://sketchfab.com/WildMesh_3D) (CC BY-NC 4.0 – non-commercial, see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md))
 - Everything else – code, shaders, sky, sounds, tools – written for this project.
 
 Details in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

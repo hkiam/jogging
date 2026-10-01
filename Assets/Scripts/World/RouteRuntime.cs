@@ -51,6 +51,8 @@ namespace Jogging.World
             if (wayside) Wayside.MakePlan(doc, path); else Wayside.ClearPlan(); // before the trees: they keep off side paths and planned objects
             TrailSurface.Plan(doc, path, Wayside.Plan); // asphalt, gravel, earth, forest floor, meadow path
             if (wayside && FindFirstObjectByType<Wayside>() == null) new GameObject("Wegrand").AddComponent<Wayside>();
+            if (wayside) Animals.MakePlan(doc, path); // deer, hares, rabbits, a fox – after the wayside (they keep off it)
+            if (wayside && FindFirstObjectByType<Animals>() == null) new GameObject("Tiere").AddComponent<Animals>();
             if (shaper != null) shaper.SetRoute(doc.profile.heightsM, doc.profile.stepM, loop, path.Length);
             Sky.Begin(p, doc.generator.seed);
             var look = FindFirstObjectByType<TerrainLook>();

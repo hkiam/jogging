@@ -322,6 +322,9 @@ namespace Jogging.World
 
         private static void Note(string key) => Sights[key] = Sights.TryGetValue(key, out int n) ? n + 1 : 1;
 
+        /// <summary>Something seen on the way that isn't on the plan (animals): into the logbook.</summary>
+        public static void NoteSight(string key) => Note(key);
+
         private void LogRun(TrailPath path)
         {
             var sm = Jogging.UI.RunSessionUI.Session;

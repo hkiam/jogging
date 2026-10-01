@@ -16,6 +16,7 @@ namespace Jogging.World
         private Quaternion? look;
         private float lift;
         private Vector3 liftFrom;
+        private Transform closeUp; // -animaltest: the camera follows this animal
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
@@ -72,6 +73,20 @@ namespace Jogging.World
                 yield return new WaitForSecondsRealtime(0.6f);
                 yield return Capture(s.name + "-b");
             }
+            // -animaltest: every kind once from the side, close up (colour, size, which way it faces)
+            var animals = Jogging.Core.Args.Has("-animaltest") ? FindFirstObjectByType<Animals>() : null;
+            if (animals != null)
+            {
+                var done = new System.Collections.Generic.HashSet<Animals.Kind>();
+                foreach (var (kind, t) in new System.Collections.Generic.List<(Animals.Kind, Transform)>(animals.Standing()))
+                {
+                    if (t == null || !done.Add(kind)) continue;
+                    closeUp = t;
+                    yield return new WaitForSecondsRealtime(0.6f);
+                    yield return Capture("tier-" + kind.ToString().ToLowerInvariant());
+                }
+                closeUp = null;
+            }
             Debug.Log("[SkyShots] fertig: " + dir);
             Application.Quit();
         }
@@ -93,6 +108,14 @@ namespace Jogging.World
         {
             if (look.HasValue && Camera.main != null) Camera.main.transform.rotation = look.Value;
             if (lift > 0f && Camera.main != null) Camera.main.transform.position = liftFrom + Vector3.up * lift;
+            if (closeUp != null && Camera.main != null)
+            {
+                var b = new Bounds(closeUp.position, Vector3.zero);
+                foreach (var r in closeUp.GetComponentsInChildren<Renderer>()) b.Encapsulate(r.bounds);
+                float size = Mathf.Max(b.size.x, b.size.y, b.size.z);
+                Vector3 eye = b.center + closeUp.right * size * 1.6f + closeUp.forward * size * 0.5f + Vector3.up * size * 0.25f;
+                Camera.main.transform.SetPositionAndRotation(eye, Quaternion.LookRotation(b.center - eye));
+            }
         }
     }
 }

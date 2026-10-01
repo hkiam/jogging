@@ -154,6 +154,9 @@ der F37; die anderen folgen den veröffentlichten Protokollen.
   auf, wenn du kommst); am Ortsrand Laternen, Verkehrsschild, Bushaltestelle; höchstens zwei Besonderheiten wie
   Wegkreuz, Kapelle, Ruine oder Aussichtspunkt. Seitenwege und Forstwege zweigen ab – gelaufen wird aber immer
   die Strecke. Über Bäche führt eine kleine Holzbrücke.
+- **Tiere** – selten, wie in echt: Hirsche äsen am Waldrand (am ehesten morgens und abends, bei Regen
+  seltener), ein Feldhase sitzt im Offenland und schießt davon, wenn du ihm zu nahe kommst, ein Kaninchen hoppelt
+  am Waldrand weg, und mit etwas Glück kreuzt in der Dämmerung ein Fuchs vor dir den Weg.
 - **Geräusche**: die Schritte klingen wie der Weg – Knirschen auf Schotter, harte Schritte auf Asphalt, dumpf auf
   Erde, Knistern auf Nadelboden, Rascheln im Wiesenweg, Knarzen im Schnee; morgens das Vogelkonzert, abends im
   Sommer Grillen, nachts im Wald ab und zu ein Waldkauz.

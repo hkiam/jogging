@@ -1,0 +1,7 @@
+"Realistic Deer 3D Model 2.0 (Demo Free Download)" by WildMesh 3D (https://sketchfab.com/WildMesh_3D)
+Source: https://sketchfab.com/3d-models/realistic-deer-3d-model-20-demo-free-download-30bd8d8458c54b0cb2d66cc12471f1d0
+Licence: CC-BY-NC-4.0 – https://creativecommons.org/licenses/by-nc/4.0/
+Converted from GLB to FBX (Blender, Tools/animals/glb2fbx.py) and scaled to real-world size in the Jogging app; materials rebuilt
+from the model's own textures (URP), body colour warmed towards a European red deer. No other changes.
+NON-COMMERCIAL: not covered by the project's MIT licence. Free use only; replace this model for any
+commercial use.

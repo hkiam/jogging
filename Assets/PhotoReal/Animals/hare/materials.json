@@ -1,0 +1,18 @@
+[
+ {
+  "name": "M_Rabbit",
+  "base": "hare_0_tex.png",
+  "normal": null,
+  "alpha": false,
+  "cutoff": 0.5,
+  "gloss": 0.0
+ },
+ {
+  "name": "M_rabbit_alpha",
+  "base": "hare_1_tex.png",
+  "normal": null,
+  "alpha": true,
+  "cutoff": 0.31549283657070615,
+  "gloss": 0.1788854381999832
+ }
+]
