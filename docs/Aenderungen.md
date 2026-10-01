@@ -4,6 +4,12 @@
 
 (nichts)
 
+## Fünfzehnter Merge (01.10.2026) – Zuschauer einstellbar
+
+- **Zuschauer einstellbar** (Streckeneinstellung „Zuschauer“: keine / wenige / einige / viele, rund 0 / 8 / 20 / 80
+  je km). Standard ist jetzt „wenige“ statt der bisher dauernd ~10 Menschen im Blickfeld; sie stehen unregelmäßig,
+  mal zu zweit, mal lange niemand. Mondnacht ohne Zuschauer. Werkstatt-Gruppen bleiben unabhängig davon.
+
 ## Vierzehnter Merge (01.10.2026) – Tiere
 
 - **Tiere** (World/Animals): Rothirsche in kleinen Gruppen am Waldrand, Feldhasen im Offenland (flüchten bei

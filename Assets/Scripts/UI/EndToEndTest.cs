@@ -132,6 +132,7 @@ namespace Jogging.UI
             // 2. Quick Run on the simulated F37
             var quick = RoutePresets.NewFreeRun();
             quick.@params.weather = "clear";
+            quick.@params.spectators = "many"; // enough figures for the twin check below
             yield return StartRun(quick);
             yield return Until(() => FindFirstObjectByType<RunStats>().DistanceMeters > 400f, 90f, "Quick Run: 400 m gelaufen");
             Check(Mathf.Abs(Belt.SpeedKmh - 8f) < 0.2f, $"Band-Tempo bleibt beim Läufer ({Belt.SpeedKmh:0.0} km/h)");

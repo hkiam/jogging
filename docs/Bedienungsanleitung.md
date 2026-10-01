@@ -42,7 +42,9 @@ Solange die App läuft, geht der Bildschirm nicht aus und der Rechner oder das T
 ## 3. Strecken
 
 - **„+ Neue Strecke“**: Länge, Rundkurs oder nicht, Anstiege, Wald oder Wiese, Wasser, Jahreszeit, Tageszeit
-  (5:00 bis 23:30 Uhr – auch Nachtläufe), Wetter, Dunst und **Nachthimmel** (sehr dunkel … Stadtnähe).
+  (5:00 bis 23:30 Uhr – auch Nachtläufe), Wetter, Dunst, **Nachthimmel** (sehr dunkel … Stadtnähe)
+  und **Zuschauer** am Wegrand (keine, wenige – Standard –, einige, viele; selbst gesetzte Zuschauergruppen aus der
+  Werkstatt bleiben immer).
   Rechts siehst du das Höhenprofil. Vorlagen als Startpunkt: Flach, Hügelig, Bergauf, Wald, **Seerunde**
   (flach, Birken, Abendlicht), **Bergpass** (ein langer, gleichmäßiger Anstieg), **Wellen** (viele kurze,
   steile Hügel) und **Winterwald** (Schnee).

@@ -770,6 +770,7 @@ namespace Jogging.Core
             ["Hase"] = "hare",
             ["Kaninchen"] = "rabbit",
             ["Fuchs"] = "fox",
+            ["wenige"] = "few",
         };
     }
 }

@@ -247,14 +247,16 @@ namespace Jogging.UI
             UiControls.Label(p, "Landschaft & Stimmung", 20, rx, -500f, rw, 32f, UiTheme.TextMuted, bold: true);
             float ly = -538f;
             Cycle(p, "Vegetation", new[] { "mixed", "conifer", "birch", "meadow" },
-                new[] { Jogging.Core.Loc.T("Mischwald"), Jogging.Core.Loc.T("Nadelwald"), Jogging.Core.Loc.T("Birkenhain"), Jogging.Core.Loc.T("Wiese & Heide") }, prm.vegetation, v => prm.vegetation = v, rx, ly, rw); ly -= 52f;
-            UiControls.SliderRow(p, Jogging.Core.Loc.T("Dichte"), 0f, 1f, prm.density, false, v => Word(v, "licht", "locker", "dicht", Jogging.Core.Loc.T("sehr dicht")), v => prm.density = v, rx, ly, rw); ly -= 50f;
-            UiControls.SliderRow(p, Jogging.Core.Loc.T("Lichtungen"), 0f, 1f, prm.clearings, false, v => Word(v, "kaum", "einige", "viele", Jogging.Core.Loc.T("sehr viele")), v => prm.clearings = v, rx, ly, rw); ly -= 50f;
+                new[] { Jogging.Core.Loc.T("Mischwald"), Jogging.Core.Loc.T("Nadelwald"), Jogging.Core.Loc.T("Birkenhain"), Jogging.Core.Loc.T("Wiese & Heide") }, prm.vegetation, v => prm.vegetation = v, rx, ly, rw); ly -= 46f;
+            UiControls.SliderRow(p, Jogging.Core.Loc.T("Dichte"), 0f, 1f, prm.density, false, v => Word(v, "licht", "locker", "dicht", Jogging.Core.Loc.T("sehr dicht")), v => prm.density = v, rx, ly, rw); ly -= 46f;
+            UiControls.SliderRow(p, Jogging.Core.Loc.T("Lichtungen"), 0f, 1f, prm.clearings, false, v => Word(v, "kaum", "einige", "viele", Jogging.Core.Loc.T("sehr viele")), v => prm.clearings = v, rx, ly, rw); ly -= 46f;
             Cycle(p, "Wasser", new[] { "none", "lake", "stream", "both" }, new[] { "kein Wasser", "See am Weg", "Bach", "See & Bach" },
-                prm.water, v => prm.water = v, rx, ly, rw); ly -= 52f;
-            UiControls.SliderRow(p, Jogging.Core.Loc.T("Relief"), 0f, 1f, prm.relief, false, v => Word(v, "flach", "sanft", Jogging.Core.Loc.T("hügelig"), "bergig"), v => prm.relief = v, rx, ly, rw); ly -= 50f;
-            UiControls.SliderRow(p, Jogging.Core.Loc.T("Tageszeit"), 5f, 23.5f, prm.timeOfDay, false, v => Jogging.Core.Loc.F("{0}:{1:00} Uhr", Mathf.FloorToInt(v), Mathf.RoundToInt((v % 1f) * 60f) % 60), v => prm.timeOfDay = Mathf.Round(v * 4f) / 4f, rx, ly, rw); ly -= 50f;
-            UiControls.SliderRow(p, Jogging.Core.Loc.T("Dunst"), 0f, 1f, prm.haze, false, v => Word(v, Jogging.Core.Loc.T("klar"), "leicht", "dunstig", "neblig"), v => prm.haze = v, rx, ly, rw);
+                prm.water, v => prm.water = v, rx, ly, rw); ly -= 46f;
+            UiControls.SliderRow(p, Jogging.Core.Loc.T("Relief"), 0f, 1f, prm.relief, false, v => Word(v, "flach", "sanft", Jogging.Core.Loc.T("hügelig"), "bergig"), v => prm.relief = v, rx, ly, rw); ly -= 46f;
+            UiControls.SliderRow(p, Jogging.Core.Loc.T("Tageszeit"), 5f, 23.5f, prm.timeOfDay, false, v => Jogging.Core.Loc.F("{0}:{1:00} Uhr", Mathf.FloorToInt(v), Mathf.RoundToInt((v % 1f) * 60f) % 60), v => prm.timeOfDay = Mathf.Round(v * 4f) / 4f, rx, ly, rw); ly -= 46f;
+            UiControls.SliderRow(p, Jogging.Core.Loc.T("Dunst"), 0f, 1f, prm.haze, false, v => Word(v, Jogging.Core.Loc.T("klar"), "leicht", "dunstig", "neblig"), v => prm.haze = v, rx, ly, rw); ly -= 46f;
+            Cycle(p, "Zuschauer", new[] { "none", "few", "some", "many" }, new[] { "keine", "wenige", "einige", "viele" },
+                prm.spectators, v => prm.spectators = v, rx, ly, rw);
 
             // Actions.
             UiControls.Button(p, Jogging.Core.Loc.T("Zurück"), () => ShowHome(), rx, -926f, 200f, 56f);

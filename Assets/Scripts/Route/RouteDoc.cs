@@ -96,6 +96,9 @@ namespace Jogging.Route
         public string weather = "clear";    // clear | cloudy | rain | snow
         public float lightPollution = 0.3f; // night sky: 0 remote and dark (Milky Way) … 1 near a town (few stars, glow)
         public float moonAge = -1f;         // days since new moon (0 … 29.5); < 0 = today's real phase
+
+        // People
+        public string spectators = "few";   // none | few | some | many – people at the trailside (workshop groups always show)
     }
 
     [Serializable]

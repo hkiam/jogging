@@ -73,6 +73,7 @@ namespace Jogging.Route
                     p.climbs = new List<RouteClimb> { new RouteClimb { atKm = 2.5f, heightM = 30f, grade = 0.05f } };
                     p.vegetation = "conifer"; p.density = 0.6f; p.clearings = 0.5f; p.water = "lake"; p.relief = 0.5f;
                     p.timeOfDay = 21f; p.haze = 0.15f; p.season = "winter"; p.weather = "clear"; p.moonAge = 11.5f;
+                    p.spectators = "none"; // nobody out at night
                     break;
                 default: // "frei"
                     d.meta.name = "Freies Laufen";
