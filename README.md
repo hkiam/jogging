@@ -41,7 +41,7 @@ It started as a family project: one treadmill, several runners, a shared weekly 
 | ❤️ **Heart rate** | Any Bluetooth heart-rate strap, or the treadmill's hand sensors; zones on screen and in the logbook. Optional **incline by pulse**: the app nudges the incline to keep you in your target zone. |
 | 📋 **Train with a plan** | Workouts (intervals, pyramids, hills, zone 2 …), your own workout editor, multi-week training plans, spoken announcements, and an optional pulse coach that speaks up when your heart rate stays out of the target zone. |
 | 👨‍👩‍👧 **Family profiles** | Several runners, each with a figure, logbook (1 Hz samples), statistics, 24 achievements, weekly goals and a family challenge. |
-| 📤 **Strava, Garmin & co.** | Every run as a TCX file (time, distance, pace, heart rate, elevation) – one at a time, all at once, or automatically after each run. |
+| 📤 **Strava, Garmin, Apple Health** | Every run as a TCX file (time, distance, pace, heart rate, elevation) – one at a time, all at once, or automatically after each run. On the iPad, runs go straight into Apple Health as indoor runs. |
 | 🗺️ **Run your real routes** | Import a GPX file from Strava, Garmin or Komoot: its length and elevation profile become a route in a generated landscape – your local hill, in any season, on the treadmill. |
 | 🛠️ **Make your own routes** | Route editor (length, climbs, curviness, vegetation, water, season, weather, time of day, night sky) and a workshop to add clearings, lakes, spectators, benches or a chapel exactly where you want them. |
 | 🎧 **Sounds of the way** | Synthesized live: footsteps that crunch on gravel and squeak in snow, dawn chorus, crickets, a tawny owl at night, rain, a burbling stream. |

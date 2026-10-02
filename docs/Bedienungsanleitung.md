@@ -153,6 +153,12 @@ der F37; die anderen folgen den veröffentlichten Protokollen.
   automatisch**. Die Dateien enthalten Zeit, Strecke, Tempo, Puls und die gelaufenen Höhenmeter; hochladen bei
   Strava (＋ → Datei hochladen), Garmin Connect (Importieren → Daten), Runalyze, Intervals.icu u. a. Auch der
   Zielbildschirm hat einen Knopf **Export (TCX)**.
+- **Apple Health** (iPad/iPhone, auf derselben Export-Seite): „Nach jedem Lauf an Apple Health senden“ trägt jeden
+  Lauf als Training „Laufen (Indoor)“ ein – mit Dauer, Strecke, Energie, Puls und Höhenmetern; er zählt für die
+  Aktivitätsringe und erscheint über iCloud auch auf dem iPhone. Beim ersten Einschalten fragt das iPad einmal
+  nach der Erlaubnis. „Alle Läufe an Health senden“ trägt auch ältere Läufe nach; schon gesendete werden ersetzt,
+  nicht doppelt eingetragen. Die App liest nichts aus Health. Health gibt die Läufe nicht an Strava oder Garmin
+  weiter – dafür bleibt der TCX-Export.
 - **Verlauf (12 Wochen)** als Balken, **Erfolge** (24 Stück).
 
 ## 7. Profil und Einstellungen

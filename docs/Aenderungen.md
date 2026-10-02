@@ -4,6 +4,13 @@
 
 (nichts)
 
+## Siebzehnter Merge (02.10.2026) – Apple Health
+
+- **Apple Health** (iPad/iPhone; Plugins/iOS/JoggingHealth.swift, Profile/AppleHealth): Läufe als Indoor-Lauf-Training
+  mit Strecke (10-s-Stücke), Energie, Puls (alle 5 s) und Höhenmetern in Health, automatisch nach jedem Lauf und
+  „alle nachtragen“ (Statistik → Export). Nur schreiben; feste Kennung je Lauf (Sync-Identifier), erneutes Senden
+  ersetzt. HealthKit-Recht und Berechtigungstexte setzt IosPostBuild.
+
 ## Sechzehnter Merge (01.10.2026) – GPX-Strecken, Export, Steigung nach Puls
 
 - **Export ausgebaut** (Statistik → „Export (Strava, Garmin …)“): alle Läufe auf einmal als TCX nach

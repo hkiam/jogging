@@ -799,6 +799,16 @@ namespace Jogging.Core
             ["Aus einer GPX-Datei: Länge, Höhenprofil und Form ({0}) stehen fest. Landschaft und Stimmung kannst du frei wählen."] = "From a GPX file: length, elevation profile and shape ({0}) are fixed. Landscape and mood are yours to choose.",
             ["Steigung nach Puls"] = "Incline by pulse",
             ["hält dich in der Zielzone: die App stellt die Steigung nach (wenn sie die Steigung stellt)"] = "keeps you in the target zone: the app adjusts the incline (when it sets the incline)",
+            ["APPLE HEALTH"] = "APPLE HEALTH",
+            ["an Apple Health senden"] = "send to Apple Health",
+            ["nicht senden"] = "don't send",
+            ["Alle Läufe an Health senden"] = "Send all runs to Health",
+            ["Bitte erst erlauben, dann noch einmal tippen."] = "Please allow it first, then tap again.",
+            ["{0} Läufe an Apple Health gesendet."] = "{0} runs sent to Apple Health.",
+            ["Erlaubt."] = "Allowed.",
+            ["Fehler: {0}"] = "Error: {0}",
+            ["Nicht erlaubt – in Einstellungen → Health → Datenzugriff → Jogging einschalten."] = "Not allowed – turn it on in Settings → Health → Data Access → Jogging.",
+            ["Noch nicht erlaubt – beim Einschalten fragt das iPad einmal."] = "Not allowed yet – the iPad asks once when you turn it on.",
         };
     }
 }

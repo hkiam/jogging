@@ -12,6 +12,8 @@ namespace Jogging.EditorTools
     /// treadmill, heart rate zone, own route) — each unlocked exactly once.
     /// Menu: Jogging → Läufer → Statistik prüfen. Headless: -executeMethod Jogging.EditorTools.StatsCheck.RunBatch
     /// </summary>
+    [System.Serializable] internal class HealthProbe { public string id; public double start, distanceM; public double[] t; public int[] hr; }
+
     public static class StatsCheck
     {
         [MenuItem("Jogging/Läufer/Statistik prüfen")]
@@ -122,6 +124,11 @@ namespace Jogging.EditorTools
             }
             catch (Exception e) { fails.Add("TCX ist kein gültiges XML: " + e.Message); }
 
+            // Apple Health: the run as the iPad plugin gets it (fixed id → sending again replaces it)
+            string hj = AppleHealth.ToJson(rec);
+            var hb = JsonUtility.FromJson<HealthProbe>(hj);
+            Ok(hb != null && hb.t.Length == 3 && hb.hr[2] == 142 && Mathf.Abs((float)hb.distanceM - 1234.5f) < 0.01f && Mathf.Approximately((float)(hb.start % 86400), 36000f)
+               && hb.id.StartsWith("jogging-") && hb.id == JsonUtility.FromJson<HealthProbe>(AppleHealth.ToJson(rec)).id, "Apple Health: Laufdaten (feste Kennung)");
             // TCX altitude: follows the incline (1 km at 5 % → +50 m), never below the start height on a flat run
             var climb = new SessionRecord();
             climb.summary.start = "2026-09-24T10:00:00Z";

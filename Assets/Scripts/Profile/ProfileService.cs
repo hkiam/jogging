@@ -165,6 +165,7 @@ namespace Jogging.Profile
             LastPlanNote = CountPlanSession(s);
             Save();
             var unlocked = CheckAchievements(s);
+            if (Core.AppSettings.Current.appleHealth && AppleHealth.Available) AppleHealth.Save(rec); // iPad: into Apple Health
             if (Core.AppSettings.Current.autoExport) // for Strava, Garmin & co.: the run lands in the export folder by itself
             {
                 try { Debug.Log($"[Jogging] Lauf exportiert: {TcxExport.SaveTo(ExportFolder, rec, Profile.playerName, true)}"); }

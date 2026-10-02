@@ -48,6 +48,7 @@ namespace Jogging.Core
         public bool announcements = true; // spoken announcements during the run
         public bool bigHud;
         public bool ambience = true;
+        public bool appleHealth;          // iPad/iPhone: every finished run into Apple Health (Statistik → Export)
         public bool autoExport;           // every finished run also as TCX into Downloads/Jogging-Export (Statistik → Export)
         public string graphics = "high";  // minimal | low | medium | high — used once chosen in Geräte → Grafik
         public bool graphicsChosen;       // false: the device's default (DefaultGraphics)
