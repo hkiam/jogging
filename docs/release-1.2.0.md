@@ -1,0 +1,6 @@
+- **Run your real routes (GPX)**: import a GPX file from Strava, Garmin, Komoot & co. – its length, elevation profile and loop become a route in a generated landscape; pick season, weather and landscape freely.
+- **Export for Strava, Garmin & co.**: a new export page (Statistics → Export) – all runs at once, or automatically after every run; an export button on the finish screen. TCX files now carry the elevation you ran.
+- **Incline by pulse** (optional, per runner): the app nudges the treadmill's incline to keep you in your target zone – patiently, one step at a time, within your treadmill's limits. Speed always stays yours.
+- **Apple Health** (iPad, when you build the app for it yourself): runs go into Health as indoor running workouts with distance, energy, heart rate and elevation.
+- **Animals**: now and then a red deer at the forest edge, a hare that bolts, a rabbit, a fox crossing at dusk – rare, like in a real forest. (The deer, rabbit and fox models are CC BY-NC – non-commercial only, see THIRD_PARTY_NOTICES.)
+- **Spectators per route**: none, few (new default), some or many – fewer people standing at the trail by default.
