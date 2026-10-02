@@ -1,0 +1,9 @@
+- **Play together** – a new Adventure page:
+  - **Climb segments**: every longer climb is timed. The family record is announced at the foot, your time at the top. Record holders wear the crown.
+  - **Family journey**: everybody's kilometres count together – from Hamburg to Munich, up the Zugspitze, around Lake Constance, along the Rhine.
+  - **Album**: 24 cards – animals, sights along the way and moods (dawn, full moon, snow …), rare ones marked ★★★.
+  - **Weekly quests**: three new ones every Monday, the same for the whole family.
+  - **Levels**: points for runs, quests and new cards; each level unlocks a shirt colour (looks only).
+  - **Streaks with rest days**: up to two rest days in a row don't break them.
+- **Running clothes**: you, your fellow runners, the rival and the ghost now run in tights and running shirts, with four new sports figures. Spectators keep their everyday clothes.
+- The finish screen shows what the run brought: climb times, journey stops, new cards, quests done and level ups.
