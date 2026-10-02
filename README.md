@@ -43,6 +43,7 @@ It started as a family project: one treadmill, several runners, a shared weekly 
 | 👨‍👩‍👧 **Family profiles** | Several runners, each with a figure, logbook (1 Hz samples), statistics, 24 achievements, weekly goals and a family challenge. |
 | 📤 **Strava, Garmin, Apple Health** | Every run as a TCX file (time, distance, pace, heart rate, elevation) – one at a time, all at once, or automatically after each run. On the iPad, runs go straight into Apple Health as indoor runs. |
 | 🗺️ **Run your real routes** | Import a GPX file from Strava, Garmin or Komoot: its length and elevation profile become a route in a generated landscape – your local hill, in any season, on the treadmill. |
+| 🏆 **Play together** | Climb segments with family records and crowns, a shared family journey (Hamburg → Munich, up the Zugspitze …), an album of animals and moods, weekly quests, levels that unlock shirt colours, streaks that allow rest days. |
 | 🛠️ **Make your own routes** | Route editor (length, climbs, curviness, vegetation, water, season, weather, time of day, night sky) and a workshop to add clearings, lakes, spectators, benches or a chapel exactly where you want them. |
 | 🎧 **Sounds of the way** | Synthesized live: footsteps that crunch on gravel and squeak in snow, dawn chorus, crickets, a tawny owl at night, rain, a burbling stream. |
 | 🌐 **English & Deutsch, km/h & mph** | Picks the system language and region, switchable in the settings. |

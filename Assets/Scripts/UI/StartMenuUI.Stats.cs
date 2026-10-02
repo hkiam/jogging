@@ -68,8 +68,8 @@ namespace Jogging.UI
             Best(p, x, ref y, "Längste Zeit", longestT > 0f ? RunnerStats.Duration(longestT) : "–");
             Best(p, x, ref y, "Schnellste 5 km", best5k > 0f ? $"{RunnerStats.Duration(best5k)}  ({RunnerStats.When(fastest.start, now)})" : "noch keine 5 km am Stück");
             Best(p, x, ref y, "Ø Tempo gesamt", RunnerStats.Pace(me.totalDistanceMeters, me.totalTimeSeconds));
-            int streak = RunnerStats.StreakDays(runs, now);
-            Best(p, x, ref y, Jogging.Core.Loc.T("Serie"), streak == 1 ? Jogging.Core.Loc.T("1 Tag") : Jogging.Core.Loc.F("{0} Tage", streak));
+            int streak = Game.Streak(runs, now).days; // up to 2 rest days in a row allowed
+            Best(p, x, ref y, Jogging.Core.Loc.T("Serie (mit Ruhetagen)"), streak == 1 ? Jogging.Core.Loc.T("1 Tag") : Jogging.Core.Loc.F("{0} Tage", streak));
 
             // ---- left: weekly challenges
             y -= 18f;

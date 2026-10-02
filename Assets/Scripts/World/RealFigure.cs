@@ -47,13 +47,88 @@ namespace Jogging.World
             return model;
         }
 
-        public static bool IsFemale(GameObject model) => model != null && model.name.StartsWith("Female");
+        public static bool IsFemale(GameObject model) => model != null && model.name.Contains("Female"); // "Female_Adult_…", "Sports_Female_…"
 
+        /// <summary>Figures that only run (sports kits): never among the spectators.</summary>
+        public static bool RunnerOnly(GameObject model) => model != null && model.name.StartsWith("Sports_");
+
+        /// <summary>The models without the runner-only ones (spectators).</summary>
+        public static GameObject[] Spectators(GameObject[] models)
+        {
+            if (models == null) return models;
+            var list = new System.Collections.Generic.List<GameObject>();
+            foreach (var m in models) if (m != null && !RunnerOnly(m)) list.Add(m);
+            return list.Count > 0 ? list.ToArray() : models;
+        }
+
+        private static readonly System.Collections.Generic.Dictionary<string, Material> sportCache = new System.Collections.Generic.Dictionary<string, Material>();
+
+        private static readonly System.Collections.Generic.Dictionary<string, Material> shirtCache = new System.Collections.Generic.Dictionary<string, Material>();
+        private static Material tint;
+
+        /// <summary>The shirt in a colour of Profile/Game.Shirts (unlocked by level): only the shirt area (Resources/Shirt mask).</summary>
+        private static void Recolour(GameObject go, string shirt)
+        {
+            var colour = Profile.Game.Shirt(shirt);
+            if (colour.id == "") return;
+            if (tint == null) tint = Resources.Load<Material>("Shirt/ShirtTint");
+            if (tint == null) return;
+            foreach (var r in go.GetComponentsInChildren<Renderer>(true))
+            {
+                var mats = r.sharedMaterials;
+                bool changed = false;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    var m = mats[i];
+                    if (m == null || !m.name.EndsWith("_body")) continue;
+                    string key = m.name + "|" + shirt + "|" + m.GetInstanceID();
+                    if (!shirtCache.TryGetValue(key, out var made) || made == null)
+                    {
+                        var mask = Resources.Load<Texture2D>("Shirt/" + m.name);
+                        var body = m.GetTexture("_BaseMap");
+                        if (mask == null || body == null) continue;
+                        var rt = new RenderTexture(body.width, body.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB) { useMipMap = true, autoGenerateMips = true, name = m.name + "_" + shirt };
+                        tint.SetTexture("_Mask", mask);
+                        tint.SetColor("_Tint", colour.color);
+                        Graphics.Blit(body, rt, tint);
+                        made = new Material(m) { name = m.name };
+                        made.SetTexture("_BaseMap", rt);
+                        shirtCache[key] = made;
+                    }
+                    mats[i] = made; changed = true;
+                }
+                if (changed) r.sharedMaterials = mats;
+            }
+        }
+
+        private static void Dress(GameObject go)
+        {
+            foreach (var r in go.GetComponentsInChildren<Renderer>(true))
+            {
+                var mats = r.sharedMaterials;
+                bool changed = false;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    if (mats[i] == null) continue;
+                    if (!sportCache.TryGetValue(mats[i].name, out var s)) sportCache[mats[i].name] = s = Resources.Load<Material>("Sport/" + mats[i].name);
+                    if (s != null) { mats[i] = s; changed = true; }
+                }
+                if (changed) r.sharedMaterials = mats;
+            }
+        }
+
+        /// <summary>
+        /// The figure in the world. sport = in running clothes (runners: you, fellow runners, the rival, the
+        /// ghost): materials that have a sport version (Resources/Sport, same name; Editor/RocketboxSetup) are
+        /// swapped; spectators keep their everyday clothes.
+        /// </summary>
         public static Animator Spawn(Transform parent, GameObject model,
-            RuntimeAnimatorController male, RuntimeAnimatorController female)
+            RuntimeAnimatorController male, RuntimeAnimatorController female, bool sport = false, string shirt = "")
         {
             var go = Object.Instantiate(model, parent, false);
             go.name = model.name;
+            if (sport) Dress(go);
+            if (!string.IsNullOrEmpty(shirt)) Recolour(go, shirt);
             var anim = go.GetComponent<Animator>();
             if (anim == null) anim = go.AddComponent<Animator>();
             anim.runtimeAnimatorController = IsFemale(model) && female != null ? female : male;

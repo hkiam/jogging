@@ -49,6 +49,7 @@ namespace Jogging.World
         private System.Collections.IEnumerator Start()
         {
             if (figureModels == null || figureModels.Length == 0) yield break;
+            figureModels = RealFigure.Spectators(figureModels); // sports kits only run
             for (float t = 0f; RouteRuntime.Current == null && t < 5f; t += Time.unscaledDeltaTime) yield return null; // the route's setting
             float perKm = PerKm(RouteRuntime.Current != null ? RouteRuntime.Current.@params.spectators : "few");
             if (perKm <= 0f) yield break;

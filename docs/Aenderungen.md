@@ -4,6 +4,19 @@
 
 (nichts)
 
+## Achtzehnter Merge (02.10.2026) – Laufkleidung, Gamification
+
+- **Gamification** (Profile/Game, Route/ClimbSegments, World/RunGame, Abenteuer-Seite): Bergwertungen aus dem
+  Höhenprofil (≥ 12 Hm, ≥ 150 m, ≥ 2,5 %; Ansage am Fuß mit Familienrekord, oben mit Zeit; Kronen), Familienreise
+  (4 Reisen mit Etappen, alle Kilometer bzw. Höhenmeter der Familie), Album (24 Karten mit Seltenheit; Stimmungen
+  werden beim Start notiert), Wochenaufgaben (3 je Woche, für alle gleich), Punkte und Level mit Shirtfarben
+  (Maske je Figur, Shader Hidden/Jogging/ShirtTint), Serie mit bis zu 2 Ruhetagen. Alles aus dem Logbuch berechnet
+  (neue Felder: climbS, overtakes). Zielbildschirm zeigt, was der Lauf gebracht hat. GameCheck prüft die Regeln.
+- **Läufer in Laufkleidung**: vier Sport-Figuren aus der Rocketbox-Bibliothek (MIT; `Tools/rocketbox/import-avatars.py`),
+  dazu Sportvarianten der Körpertexturen (`Tools/rocketbox/sport-textures.py`: Jeans → Tights, bedruckte oder
+  gestreifte Shirts → einfarbige Laufshirts, Falten bleiben). Läufer (du, Mitläufer, Rivale, Geist) tragen sie
+  (World/RealFigure, Resources/Sport), Zuschauer behalten Alltagskleidung und bekommen die Sportfiguren nie.
+
 ## Siebzehnter Merge (02.10.2026) – Apple Health
 
 - **Apple Health** (iPad/iPhone; Plugins/iOS/JoggingHealth.swift, Profile/AppleHealth): Läufe als Indoor-Lauf-Training

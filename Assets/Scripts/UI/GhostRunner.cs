@@ -60,7 +60,7 @@ namespace Jogging.UI
             var player = FindFirstObjectByType<RealPlayerFigure>();
             if (player == null || player.CurrentModel == null) return;
             var root = new GameObject("Ghost Runner").transform;
-            anim = RealFigure.Spawn(root, player.CurrentModel, player.MaleController, player.FemaleController);
+            anim = RealFigure.Spawn(root, player.CurrentModel, player.MaleController, player.FemaleController, sport: true, shirt: RealPlayerFigure.CurrentShirt);
             anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             GhostLook.Apply(anim.gameObject); // see-through: clearly not a real runner
             RivalTag.Create(root).SetText(Jogging.Core.Loc.T("▼ GEIST"), new Color(0.65f, 0.85f, 1f), fadeNear: false);

@@ -268,7 +268,7 @@ namespace Jogging.World
         private void SetFigure(Runner r, GameObject model)
         {
             if (r.anim != null) Destroy(r.anim.gameObject);
-            r.anim = RealFigure.Spawn(r.root, model, maleRunController, femaleRunController);
+            r.anim = RealFigure.Spawn(r.root, model, maleRunController, femaleRunController, sport: true);
             r.anim.SetFloat(SpeedId, 3f);
             r.anim.Play(0, 0, Random.value); // de-sync strides
         }

@@ -87,6 +87,8 @@ namespace Jogging.UI
             string unlocked = "";
             if (recorder != null)
                 foreach (var a in recorder.NewAchievements) unlocked += Jogging.Core.Loc.F("\nNeuer Erfolg: {0}", a);
+            var (gameText, gameSaid) = GameLines();
+            unlocked += gameText;
 
             // An endless run or one stopped midway has no finish line.
             var workout = Jogging.Training.WorkoutRuntime.Current;
@@ -123,6 +125,7 @@ namespace Jogging.UI
             string said = $"{Jogging.Core.Loc.T(workout != null && wr.Done ? "Workout geschafft" : complete ? "Ziel erreicht" : "Lauf beendet")}. " +
                           $"{Jogging.Training.Speech.Km(dist)} in {Jogging.Training.Speech.Duration(secs)}. {Jogging.Training.Speech.Pace(dist, secs)}.";
             if (plan != "") said += " " + plan.Replace("„", "").Replace("“", "") + ".";
+            if (gameSaid != "") said += " " + gameSaid;
             Announcer.Current?.Say(said);
 
             if (overlay != null) overlay.SetActive(true);
@@ -206,7 +209,7 @@ namespace Jogging.UI
             prt.anchorMin = prt.anchorMax = new Vector2(0.5f, 0.5f);
             prt.pivot = new Vector2(0.5f, 0.5f);
             prt.anchoredPosition = Vector2.zero;
-            prt.sizeDelta = new Vector2(620f, 590f);
+            prt.sizeDelta = new Vector2(660f, 700f);
 
             // Accent header bar.
             var header = UiTheme.Panel(panel.transform, UiTheme.Success);
@@ -221,6 +224,7 @@ namespace Jogging.UI
             var srt = summary.GetComponent<RectTransform>();
             srt.anchorMin = new Vector2(0f, 0f); srt.anchorMax = new Vector2(1f, 1f);
             srt.offsetMin = new Vector2(48f, 200f); srt.offsetMax = new Vector2(-48f, -110f);
+            summary.resizeTextForBestFit = true; summary.resizeTextMinSize = 15; summary.resizeTextMaxSize = 26; // long runs say a lot
 
             // A free run through a new landscape can be kept as a route (same seed = same landscape).
             saveRoute = UiTheme.Button(panel.transform, "Strecke speichern", SaveRoute, UiTheme.Success, 20);
@@ -273,6 +277,74 @@ namespace Jogging.UI
                 if (!Jogging.Core.Platform.IsMobile) Application.OpenURL("file://" + Jogging.Profile.ProfileService.ExportFolder);
             }
             catch (System.Exception e) { exportLabel.text = Jogging.Core.Loc.T("Export fehlgeschlagen"); Debug.LogWarning($"[Jogging] Export: {e.Message}"); }
+        }
+
+        /// <summary>
+        /// What the run did for the game (Profile/Game): climb times, the family journey, new album cards,
+        /// weekly quests done, a new level – as lines for the screen and a short spoken part.
+        /// </summary>
+        private (string text, string said) GameLines()
+        {
+            var ps = ProfileService.Instance;
+            var rec = recorder != null ? recorder.LastRecord : null;
+            if (ps == null || rec == null) return ("", "");
+            var text = new System.Text.StringBuilder();
+            var said = new List<string>();
+            foreach (var c in RunGame.ClimbResults) text.Append("\n⛰ ").Append(c);
+
+            var after = new Dictionary<string, List<SessionSummary>>();
+            foreach (var r in ps.Runners) after[r.id] = ps.SummariesOf(r.id);
+            string me = ps.Profile.id;
+            var mine = after.TryGetValue(me, out var m) ? m : new List<SessionSummary>();
+            var mineBefore = mine.FindAll(x => x.file != rec.summary.file);
+            var before = new Dictionary<string, List<SessionSummary>>(after) { [me] = mineBefore };
+
+            // family journey
+            var j0 = Game.JourneyNow(before); var j1 = Game.JourneyNow(after);
+            var (stops, finished) = Game.JourneyStep(j0, j1);
+            string unit(float v, Game.Journey j) => j.elevation ? Jogging.Core.Units.FmtElev(v) : Jogging.Core.Units.FmtDist(v * 1000f);
+            if (finished)
+            {
+                text.Append("\n🧭 ").Append(Jogging.Core.Loc.F("Familienreise geschafft: {0}!", Jogging.Core.Loc.T(j0.journey.name)));
+                said.Add(Jogging.Core.Loc.F("Eure Familienreise ist geschafft: {0}.", Jogging.Core.Loc.T(j0.journey.name)));
+            }
+            else if (stops.Count > 0)
+            {
+                text.Append("\n🧭 ").Append(Jogging.Core.Loc.F("Familienreise: {0} erreicht", string.Join(", ", stops.ConvertAll(Jogging.Core.Loc.T))));
+                said.Add(Jogging.Core.Loc.F("Familienreise: {0} erreicht.", Jogging.Core.Loc.T(stops[stops.Count - 1])));
+            }
+            else if (j1.done > j0.done)
+                text.Append("\n🧭 ").Append(Jogging.Core.Loc.F("Familienreise: noch {0} bis {1}", unit(j1.next.at - j1.done, j1.journey), Jogging.Core.Loc.T(j1.next.name)));
+
+            // album
+            var cards = Game.NewCards(mineBefore, rec.summary);
+            if (cards.Count > 0)
+            {
+                text.Append("\n📒 ").Append(Jogging.Core.Loc.F("Neu im Album: {0}", string.Join(", ", cards.ConvertAll(Jogging.Core.Loc.T))));
+                said.Add(Jogging.Core.Loc.F("Neu im Album: {0}.", string.Join(", ", cards.ConvertAll(Jogging.Core.Loc.T))));
+            }
+
+            // weekly quests
+            var now = System.DateTime.Now;
+            var q0 = Game.QuestProgress(mineBefore, now); var q1 = Game.QuestProgress(mine, now);
+            for (int i = 0; i < q1.Count && i < q0.Count; i++)
+                if (q1[i].done && !q0[i].done)
+                {
+                    text.Append("\n✅ ").Append(Jogging.Core.Loc.F("Wochenaufgabe geschafft: {0}", Jogging.Core.Loc.T(q1[i].q.text)));
+                    said.Add(Jogging.Core.Loc.T("Wochenaufgabe geschafft."));
+                }
+
+            // experience and level
+            int x0 = Game.Xp(mineBefore), x1 = Game.Xp(mine);
+            int l0 = Game.Level(x0), l1 = Game.Level(x1);
+            text.Append("\n⭐ ").Append(Jogging.Core.Loc.F("+{0} Punkte · Level {1}", x1 - x0, l1));
+            if (l1 > l0)
+            {
+                var shirt = System.Array.Find(Game.Shirts, s => s.level == l1);
+                text.Append(Jogging.Core.Loc.F(" – aufgestiegen!{0}", shirt.name != null ? Jogging.Core.Loc.F(" Neue Shirtfarbe: {0}", Jogging.Core.Loc.T(shirt.name)) : ""));
+                said.Add(Jogging.Core.Loc.F("Glückwunsch, Level {0}!", l1));
+            }
+            return (text.ToString(), string.Join(" ", said));
         }
 
         private void SaveRoute()

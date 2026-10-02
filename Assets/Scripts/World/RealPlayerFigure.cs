@@ -66,6 +66,22 @@ namespace Jogging.World
             if (ProfileService.Instance != null) ProfileService.Instance.FigureChanged -= Show;
         }
 
+        private string shownShirt = "";
+
+        /// <summary>The active runner's shirt colour if their level has unlocked it ("" = the figure's own).</summary>
+        public static string CurrentShirt
+        {
+            get
+            {
+                var ps = ProfileService.Instance;
+                if (ps == null || string.IsNullOrEmpty(ps.Profile.shirt)) return "";
+                return Game.Level(Game.Xp(ps.SummariesOf(ps.Profile.id))) >= Game.Shirt(ps.Profile.shirt).level ? ps.Profile.shirt : "";
+            }
+        }
+
+        /// <summary>Put the figure on again (after a shirt colour change).</summary>
+        public void Refresh() { var ps = ProfileService.Instance; Show(ps != null ? ps.Profile.figureModel : null); }
+
         /// <summary>Show the figure with this model name (unknown/empty → default).</summary>
         public void Show(string modelName)
         {
@@ -73,8 +89,10 @@ namespace Jogging.World
             if (!string.IsNullOrEmpty(modelName))
                 foreach (var c in choices) if (c != null && c.name == modelName) { m = c; break; }
             if (m == null) return;
-            if (anim != null) { if (anim.gameObject.name == m.name) return; Destroy(anim.gameObject); }
-            anim = RealFigure.Spawn(transform, m, controller, femaleController != null ? femaleController : controller);
+            string shirt = CurrentShirt;
+            if (anim != null) { if (anim.gameObject.name == m.name && shirt == shownShirt) return; Destroy(anim.gameObject); }
+            shownShirt = shirt;
+            anim = RealFigure.Spawn(transform, m, controller, femaleController != null ? femaleController : controller, sport: true, shirt: shirt);
             anim.transform.localPosition = new Vector3(0f, footOffset, 0f);
             anim.transform.localRotation = Quaternion.identity;
             anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;

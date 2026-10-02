@@ -7,7 +7,7 @@ project. The following parts come from others and keep their own licences.
 
 | What | Where | Licence |
 |---|---|---|
-| **Microsoft Rocketbox Avatar Library** – 10 adult avatars and run / idle / clap / cheer / wave animations (textures downscaled, specular maps dropped) | `Assets/Rocketbox/` | MIT, © Microsoft Corporation – see [`Assets/Rocketbox/LICENSE.txt`](Assets/Rocketbox/LICENSE.txt) and <https://github.com/microsoft/Microsoft-Rocketbox> |
+| **Microsoft Rocketbox Avatar Library** – 10 adult avatars, 4 sports avatars (`Tools/rocketbox/import-avatars.py`), running-clothes variants of the textures (`Tools/rocketbox/sport-textures.py`), and run / idle / clap / cheer / wave animations (textures downscaled, specular maps dropped) | `Assets/Rocketbox/` | MIT, © Microsoft Corporation – see [`Assets/Rocketbox/LICENSE.txt`](Assets/Rocketbox/LICENSE.txt) and <https://github.com/microsoft/Microsoft-Rocketbox> |
 | **Poly Haven** models and textures (tree stumps, logs, ferns, nettles, bench, lamp, …; asphalt, gravel, forest floor, bark, planks, …), 1k resolution | `Assets/PhotoReal/Wayside/` | CC0 1.0 (public domain) – <https://polyhaven.com> |
 | **Hare** – “Animated Rabbit – 3D Animal Model” by [AnimalMesh 3D](https://sketchfab.com/AnimalMesh3D) (converted to FBX, scaled, materials rebuilt) | `Assets/PhotoReal/Animals/hare/` | CC BY 4.0 – see its `LICENSE.txt` |
 | **Red deer, rabbit, fox** – “Realistic Deer 3D Model 2.0”, “RABBIT – Realistic 3D Model”, “FOX – Realistic 3D Model” (demo versions) by [WildMesh 3D](https://sketchfab.com/WildMesh_3D) (converted to FBX, scaled, materials rebuilt, deer colour warmed) | `Assets/PhotoReal/Animals/{deer,rabbit,fox}/` | **CC BY-NC 4.0 – non-commercial only**, see each `LICENSE.txt` |

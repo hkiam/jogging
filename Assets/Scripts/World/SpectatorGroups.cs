@@ -61,6 +61,7 @@ namespace Jogging.World
             var root = new GameObject("SpectatorGroup");
             root.transform.SetParent(transform, false);
             var rng = new System.Random(Mathf.RoundToInt(e.atM * 7f) + 1);
+            var models = RealFigure.Spectators(figureModels); // sports kits only run
             string player = RealFigure.PlayerFigure();
             int n = Mathf.Clamp(e.count, 1, 30);
             for (int i = 0; i < n; i++)
@@ -74,7 +75,7 @@ namespace Jogging.World
                 t.SetParent(root.transform, false);
                 // Face the trail (+ a little towards the runner coming up).
                 t.SetPositionAndRotation(w, path.Rotation(along) * Quaternion.Euler(0f, side > 0 ? -110f : 110f, 0f));
-                var model = RealFigure.NotPlayer(figureModels[rng.Next(figureModels.Length)], figureModels, player);
+                var model = RealFigure.NotPlayer(models[rng.Next(models.Length)], models, player);
                 var anim = RealFigure.Spawn(t, model, maleController, femaleController);
                 anim.Play(Moods[rng.Next(Moods.Length)], 0, (float)rng.NextDouble());
             }

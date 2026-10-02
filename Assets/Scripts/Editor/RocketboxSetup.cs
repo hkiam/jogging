@@ -58,6 +58,7 @@ namespace Jogging.EditorTools
             ti.maxTextureSize = 1024;
             if (assetPath.Contains("_normal")) { ti.textureType = TextureImporterType.NormalMap; ti.convertToNormalmap = false; }
             if (assetPath.Contains("_opacity")) ti.alphaIsTransparency = true;
+            if (assetPath.Contains("/Resources/Shirt/")) { ti.sRGBTexture = false; ti.maxTextureSize = 512; ti.mipmapEnabled = false; ti.textureCompression = TextureImporterCompression.Uncompressed; } // shirt masks: data, not colour
         }
 
         private void OnPostprocessMeshHierarchy(GameObject g)
@@ -100,6 +101,7 @@ namespace Jogging.EditorTools
             // Textures first, then the models again so their materials find the PNGs.
             AssetDatabase.ImportAsset(RocketboxImport.Root, ImportAssetOptions.ImportRecursive);
             foreach (var p in ModelPaths()) BuildMaterials(p);
+            ShirtTintMaterial();
 
             foreach (bool f in new[] { false, true })
             {
@@ -161,9 +163,36 @@ namespace Jogging.EditorTools
                 }
                 EditorUtility.SetDirty(m);
                 mi.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material), n), m);
+
+                // running clothes (Tools/rocketbox/sport-textures.py): the same material with the sport texture,
+                // in Resources/Sport under the same name – runners wear it (World/RealFigure), spectators don't
+                var sport = AssetDatabase.LoadAssetAtPath<Texture2D>(dir + "/Textures/" + n + "_sport.png");
+                if (sport != null)
+                {
+                    const string sportDir = "Assets/Rocketbox/Resources/Sport";
+                    if (!AssetDatabase.IsValidFolder("Assets/Rocketbox/Resources")) AssetDatabase.CreateFolder("Assets/Rocketbox", "Resources");
+                    if (!AssetDatabase.IsValidFolder(sportDir)) AssetDatabase.CreateFolder("Assets/Rocketbox/Resources", "Sport");
+                    string sp = sportDir + "/" + n + ".mat";
+                    var sm = AssetDatabase.LoadAssetAtPath<Material>(sp);
+                    if (sm == null) { sm = new Material(m); AssetDatabase.CreateAsset(sm, sp); } else sm.CopyPropertiesFromMaterial(m);
+                    sm.SetTexture("_BaseMap", sport);
+                    sm.SetFloat("_Smoothness", 0.34f); // running fabric is a little shinier than cotton
+                    EditorUtility.SetDirty(sm);
+                }
             }
             AssetDatabase.SaveAssets();
             mi.SaveAndReimport();
+        }
+
+        // The material that colours shirts (Resources/Shirt; shader Hidden/Jogging/ShirtTint) – in Resources, so the
+        // build has it.
+        private static void ShirtTintMaterial()
+        {
+            const string path = "Assets/Rocketbox/Resources/Shirt/ShirtTint.mat";
+            var sh = AssetDatabase.LoadAssetAtPath<Shader>("Assets/Rocketbox/Resources/Shirt/ShirtTint.shader");
+            if (sh == null) { Debug.LogWarning("[Jogging] ShirtTint.shader fehlt"); return; }
+            var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (m == null) AssetDatabase.CreateAsset(new Material(sh), path); else m.shader = sh;
         }
 
         public static void SetupBatch()

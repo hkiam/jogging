@@ -143,6 +143,9 @@ namespace Jogging.Profile
             if (hrStats.HasData) { s.avgHr = hrStats.AvgBpm; s.maxHr = hrStats.MaxBpm; s.hrZoneSeconds = new List<float>(hrStats.ZoneSeconds); }
             foreach (var kv in World.Wayside.Sights) s.sights.Add(kv.Value > 1 ? $"{kv.Key}:{kv.Value}" : kv.Key);
             s.surfaceM = new List<float>(World.Wayside.SurfaceMetres);
+            s.climbS = new List<float>(World.RunGame.ClimbTimes);
+            var field = FindFirstObjectByType<World.AiRunnerManager>();
+            if (field != null) s.overtakes = field.OvertakenCount;
             var w = Training.WorkoutRuntime.Current;
             if (w != null)
             {

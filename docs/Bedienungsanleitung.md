@@ -161,6 +161,30 @@ der F37; die anderen folgen den veröffentlichten Protokollen.
   weiter – dafür bleibt der TCX-Export.
 - **Verlauf (12 Wochen)** als Balken, **Erfolge** (24 Stück).
 
+## 6a. Abenteuer
+
+**Abenteuer** im Home (die Zeile darüber zeigt das Wichtigste auf einen Blick). Alles kommt aus dem Logbuch –
+es belohnt regelmäßiges Laufen, nicht hartes.
+
+- **Bergwertungen**: Jeder längere Anstieg einer Strecke (mindestens 12 Höhenmeter, auch bei GPX-Strecken) wird
+  gestoppt. Am Fuß sagt die App den Familienrekord an, oben deine Zeit („neuer Familienrekord“ oder „9 s hinter
+  Lena“). Wer den Rekord hält, hat die **Krone**; die Kronen aller stehen auf der Abenteuer-Seite, die Rekorde je
+  Anstieg unter Meine Strecken → Strecke. Rekorde gibt es auf gespeicherten Strecken (Quick Run nennt nur die Zeit).
+- **Familienreise**: Alle Kilometer der Familie zählen gemeinsam – von Hamburg nach München, danach die Höhenmeter
+  bis zur Zugspitze, einmal um den Bodensee und den Rhein entlang. Der Zielbildschirm meldet jedes erreichte
+  Etappenziel.
+- **Album**: 24 Karten – Tiere (der Fuchs ist selten und zeigt sich am ehesten in der Dämmerung), Besonderheiten am
+  Weg (Kapelle, Ruine, Aussichtspunkt …) und Stimmungen (Morgenrot, Nachtlauf, Vollmond, Schnee, Nebel …).
+- **Wochenaufgaben**: jeden Montag drei neue, für die ganze Familie gleich (z. B. an 3 Tagen laufen, 100 Höhenmeter
+  sammeln, „Finde: Kapelle“); daneben steht, wer sie schon geschafft hat.
+- **Level und Shirtfarbe**: Punkte für jeden Lauf (Strecke, Höhenmeter, Bergwertungen), für Wochenaufgaben (je 50)
+  und neue Album-Karten (je 15). Jedes Level schaltet eine Shirtfarbe frei (Rot ab Level 2 … Gold ab Level 10) –
+  nur Optik; auf der Abenteuer-Seite wählen.
+- **Serie**: Tage in Folge – bis zu 2 Ruhetage am Stück unterbrechen sie nicht.
+
+**Laufkleidung**: Läufer – du, die Mitläufer, der Rivale und der Geist – laufen in Sportsachen (Tights, Laufshirts,
+vier Figuren in Lauf- und Trainingskleidung); die Zuschauer am Wegrand bleiben in Alltagskleidung.
+
 ## 7. Profil und Einstellungen
 
 - **Profil** (im Home oben rechts) – was zu einem Läufer gehört: Name, Figur, Geburtsjahr, Gewicht (für

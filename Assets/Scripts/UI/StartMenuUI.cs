@@ -382,7 +382,7 @@ namespace Jogging.UI
 
         private void ShowActions(RouteDoc d, int pageIndex, string note = null)
         {
-            var p = NewPage(1240f, 640f);
+            var p = NewPage(1240f, 780f);
             lastActionsPage = pageIndex;
             ShareQr(p, d, 800f, -24f);
             UiControls.Label(p, d.meta.name, 32, 40f, -24f, 680f, 48f, UiTheme.TextPrimary, bold: true);
@@ -408,7 +408,26 @@ namespace Jogging.UI
                 else { confirmDelete = d.id; ShowActions(d, pageIndex); }
             }, 40f, y, 680f, 58f, asking ? UiTheme.Danger : (Color?)null); y -= 84f;
             if (note != null) UiControls.Label(p, note, 19, 40f, y, 680f, 60f, UiTheme.Success, TextAnchor.UpperLeft);
-            UiControls.Button(p, Jogging.Core.Loc.T("Zurück"), () => { confirmDelete = null; ShowList(pageIndex); }, 540f, -566f, 180f, 56f);
+
+            // climb segments of this route with the family's records
+            var climbs = ClimbSegments.Of(d);
+            var ps = ProfileService.Instance;
+            UiControls.Label(p, "BERGWERTUNGEN", 16, 40f, -500f, 680f, 24f, UiTheme.TextMuted, bold: true);
+            if (climbs.Count == 0) UiControls.Label(p, "keine – die Strecke hat keinen längeren Anstieg", 18, 40f, -528f, 680f, 28f, UiTheme.TextMuted);
+            else if (ps != null)
+            {
+                var fam = new Dictionary<string, List<SessionSummary>>();
+                foreach (var r in ps.Runners) fam[r.id] = ps.SummariesOf(r.id);
+                for (int i = 0; i < Mathf.Min(climbs.Count, 6); i++)
+                {
+                    var rec = Game.ClimbBest(fam, d.id, d.revision, i);
+                    string who = rec != null ? System.Linq.Enumerable.FirstOrDefault(ps.Runners, r => r.id == rec.Value.runnerId)?.playerName ?? "?" : "";
+                    UiControls.Label(p, $"{ClimbSegments.Name(i)} · km {Jogging.Core.Units.Dist(climbs[i].startM).ToString("0.0", Jogging.Core.Loc.Culture)} · {ClimbSegments.Describe(climbs[i])}" +
+                        (rec != null ? $"   👑 {who} {World.RunGame.Clock(rec.Value.seconds)}" : Jogging.Core.Loc.T("   · noch kein Rekord")),
+                        18, 40f, -528f - i * 30f, 1160f, 28f, rec != null ? UiTheme.TextPrimary : UiTheme.TextMuted);
+                }
+            }
+            UiControls.Button(p, Jogging.Core.Loc.T("Zurück"), () => { confirmDelete = null; ShowList(pageIndex); }, 1020f, -706f, 180f, 56f);
         }
 
         // The share code as a QR code: scan it with a phone camera and send the text on (messenger, mail),

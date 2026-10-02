@@ -54,6 +54,9 @@ namespace Jogging.Core
             return false;
         }
 
+        /// <summary>There is an English text for this German one (tests).</summary>
+        public static bool HasEnglish(string de) => EnglishTexts.ContainsKey(de);
+
         /// <summary>A text with values: <c>F("{0} km diese Woche", km)</c>.</summary>
         public static string F(string de, params object[] args) => string.Format(Culture, T(de), args);
     }

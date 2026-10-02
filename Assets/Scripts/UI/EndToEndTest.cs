@@ -413,6 +413,14 @@ namespace Jogging.UI
             var (again, _) = PS.ExportAll(PS.Profile);
             Check(total > 0 && written == total && files == total && again == 0, $"Alle Läufe exportiert ({written} von {total}, {files} Dateien, beim 2. Mal {again})");
 
+            // 11a. the game: climbs logged per route, points and level from the logbook
+            var mineAll = PS.SummariesOf(PS.Profile.id);
+            var routeRun = mineAll.FirstOrDefault(x => !string.IsNullOrEmpty(x.routeId));
+            var rdoc = routeRun != null ? RouteStore.LoadAll().FirstOrDefault(r => r.id == routeRun.routeId) : null;
+            Check(rdoc == null || routeRun.climbS.Count == ClimbSegments.Of(rdoc).Count, $"Bergwertungen im Logbuch ({routeRun?.climbS.Count ?? -1} von {(rdoc != null ? ClimbSegments.Of(rdoc).Count : -1)})");
+            int xpAll = Game.Xp(mineAll);
+            Check(xpAll > 0 && Game.Level(xpAll) >= 1 && Game.QuestProgress(mineAll, DateTime.Now).Count == 3, $"Spiel: {xpAll} Punkte, Level {Game.Level(xpAll)}");
+
             // 11b. a GPX file in Downloads becomes a route: found, imported, with its own profile
             var gpx = new System.Text.StringBuilder("<?xml version=\"1.0\"?><gpx version=\"1.1\" xmlns=\"http://www.topografix.com/GPX/1/1\"><trk><name>E2E-Runde</name><trkseg>");
             for (int i = 0; i <= 400; i++)

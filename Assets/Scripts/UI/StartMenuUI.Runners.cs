@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Jogging.Profile;
@@ -120,7 +121,7 @@ namespace Jogging.UI
         }
 
         private static string FigureKind(string model) =>
-            Jogging.Core.Loc.T(!string.IsNullOrEmpty(model) && model.StartsWith("Female") ? "Läuferin" : "Läufer");
+            Jogging.Core.Loc.T(!string.IsNullOrEmpty(model) && model.Contains("Female") ? "Läuferin" : "Läufer");
 
         // ------------------------------------------------------------------ new runner
 
@@ -172,7 +173,7 @@ namespace Jogging.UI
         private void ShowHome()
         {
             const float w = 860f;
-            var p = NewPage(w, 830f);
+            var p = NewPage(w, 940f);
             SetDim(RunnerDim);
             var ps = ProfileService.Instance;
             var me = ps != null ? ps.Profile : new ProfileData();
@@ -180,9 +181,9 @@ namespace Jogging.UI
             var now = DateTime.Now;
 
             UiControls.Label(p, me.playerName, 48, 50f, -24f, 420f, 64f, UiTheme.TextPrimary, bold: true);
-            int streak = RunnerStats.StreakDays(runs, now);
+            int streak = Game.Streak(runs, now).days; // rest days allowed (up to 2 in a row)
             if (streak >= 2)
-                UiControls.Label(p, Jogging.Core.Loc.F("{0} Tage in Folge", streak), 22, w - 560f, -24f, 300f, 64f, new Color(1f, 0.7f, 0.3f), TextAnchor.MiddleRight, bold: true);
+                UiControls.Label(p, Jogging.Core.Loc.F("Serie {0} Tage", streak), 22, w - 560f, -24f, 300f, 64f, new Color(1f, 0.7f, 0.3f), TextAnchor.MiddleRight, bold: true);
             UiControls.Button(p, Jogging.Core.Loc.T("Profil"), () => ShowProfile(), w - 230f, -34f, 180f, 46f);
 
             // Quick Run: the one obvious action.
@@ -244,9 +245,23 @@ namespace Jogging.UI
             }
 
             // the app's settings are on the main dialog ("Läufer wechseln"), not here
-            float bw2 = (w - 100f - 16f) / 2f;
-            UiControls.Button(p, "Läufer wechseln", ShowRunners, 50f, -752f, bw2, 52f);
-            UiControls.Button(p, Jogging.Core.Loc.T("Statistik & Erfolge"), () => ShowStats(), 50f + bw2 + 16f, -752f, bw2, 52f, new Color(0.55f, 0.42f, 0.85f));
+            // the playful side in one line (Abenteuer page)
+            if (ps != null)
+            {
+                var fam = new Dictionary<string, List<SessionSummary>>();
+                foreach (var r in ps.Runners) fam[r.id] = ps.SummariesOf(r.id);
+                var j = Game.JourneyNow(fam);
+                int quests = Game.QuestProgress(runs, now).Count(q => q.done);
+                int cards = Game.Album(runs).Keys.Count(k => System.Array.Exists(Game.Cards, c => c.key == k));
+                string left = j.journey.elevation ? Jogging.Core.Units.FmtElev(j.next.at - j.done) : Jogging.Core.Units.FmtDist((j.next.at - j.done) * 1000f);
+                Section(p, "ABENTEUER", -754f, Jogging.Core.Loc.F("Level {0}  ·  {1} bis {2}  ·  Aufgaben {3}/3  ·  Album {4}/{5}",
+                    Game.Level(Game.Xp(runs)), left, Jogging.Core.Loc.T(j.next.name), quests, cards, Game.Cards.Length));
+            }
+
+            float bw3 = (w - 100f - 2 * 16f) / 3f;
+            UiControls.Button(p, "Läufer wechseln", ShowRunners, 50f, -858f, bw3, 52f);
+            UiControls.Button(p, Jogging.Core.Loc.T("Abenteuer"), () => ShowAdventure(), 50f + bw3 + 16f, -858f, bw3, 52f, new Color(0.85f, 0.62f, 0.15f));
+            UiControls.Button(p, Jogging.Core.Loc.T("Statistik & Erfolge"), () => ShowStats(), 50f + 2 * (bw3 + 16f), -858f, bw3, 52f, new Color(0.55f, 0.42f, 0.85f));
         }
 
         /// <summary>

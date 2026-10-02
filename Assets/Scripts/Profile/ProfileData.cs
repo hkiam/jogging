@@ -29,6 +29,7 @@ namespace Jogging.Profile
 
         // Ghost runner on saved routes (your best run runs along); true = switched off.
         public bool ghostOff;
+        public string shirt = "";       // shirt colour (Profile/Game.Shirts, unlocked by level); "" = the figure's own
         public bool pulseIncline;       // incline by heart rate: the app moves the incline to keep the target zone (needs a target zone and app-set incline)
         public int pulseCoach;          // pulse coach: −1 off, 0 only in workouts with a target zone, 1…5 also in free runs (this zone)
 

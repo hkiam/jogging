@@ -24,6 +24,7 @@ namespace Jogging.EditorTools
             ("Laufband-Protokolle", TreadmillProtocolsCheck.Run),
             ("Statistik", StatsCheck.Run),
             ("Datensicherung", BackupCheck.Run),
+            ("Spiel", GameCheck.Run),
             ("Erosion (bitgleich)", ErosionCheck.Run),
         };
 

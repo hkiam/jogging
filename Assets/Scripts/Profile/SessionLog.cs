@@ -35,6 +35,8 @@ namespace Jogging.Profile
         public List<float> hrZoneSeconds = new List<float>(); // seconds in zone 1…5 (empty without heart rate)
         public List<string> sights = new List<string>();     // passed on the way: "Kapelle", "Brücke:2" … (German keys)
         public List<float> surfaceM = new List<float>();     // metres on asphalt, gravel, earth, forest floor, meadow path
+        public List<float> climbS = new List<float>();       // climb segments of the route (Route/ClimbSegments): seconds, 0 = not run through
+        public int overtakes;                                // fellow runners overtaken
     }
 
     /// <summary>One sample per second of running time.</summary>
