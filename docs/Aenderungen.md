@@ -4,6 +4,19 @@
 
 (nichts)
 
+## Neunzehnter Merge (03.10.2026) – Begleithund, Zielbildschirm
+
+- **Begleithund** (World/DogCompanion, Editor/DogAssets, Profil → Begleithund mit Name): Deutscher Schäferhund
+  (RetroStyle Games, kostenlos auf Fab – Fab-Standardlizenz, daher nicht im öffentlichen Repo, `Tools/dogs/`).
+  Verhalten wie ein Hund: bei Fuß (Seite wechselt), voraus und warten, schnüffeln und aufholen, Extrarunde über
+  freies Gelände; Gangart nach Tempo (zügiger Schritt bis 9,5 km/h, darüber Galopp), Kurven-Clips; weicht dir und
+  allen Mitläufern aus, nie zwischen Kamera und dir; kommt nach spätestens 40 s zurück, bei großem Rückstand im
+  Sprint, ab 120 m steht er wieder neben dir; Teilschritte bei langsamen Bildern. Logbuch-Feld dog, zwei Erfolge.
+  Testbilder: `-dogshots <ordner> -beltsim -dog germanshepherd`. Der Shiba Inu von Sketchfab hat keine
+  Lauf-Animation und ist deshalb nicht dabei.
+- **Zielbildschirm** in zwei Spalten (links der Lauf, rechts Bestzeit, Unterwegs, Erfolge, Spiel); Schrift wird bei
+  viel Text kleiner und läuft nie mehr über die Knöpfe.
+
 ## Achtzehnter Merge (02.10.2026) – Laufkleidung, Gamification
 
 - **Gamification** (Profile/Game, Route/ClimbSegments, World/RunGame, Abenteuer-Seite): Bergwertungen aus dem

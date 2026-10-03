@@ -37,6 +37,7 @@ namespace Jogging.Profile
         public List<float> surfaceM = new List<float>();     // metres on asphalt, gravel, earth, forest floor, meadow path
         public List<float> climbS = new List<float>();       // climb segments of the route (Route/ClimbSegments): seconds, 0 = not run through
         public int overtakes;                                // fellow runners overtaken
+        public string dog = "";                              // the companion dog's name ("" = ran alone)
     }
 
     /// <summary>One sample per second of running time.</summary>

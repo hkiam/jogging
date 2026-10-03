@@ -146,6 +146,7 @@ namespace Jogging.Profile
             s.climbS = new List<float>(World.RunGame.ClimbTimes);
             var field = FindFirstObjectByType<World.AiRunnerManager>();
             if (field != null) s.overtakes = field.OvertakenCount;
+            if (World.DogCompanion.Current != null) s.dog = World.DogCompanion.DogName(ProfileService.Instance.Profile);
             var w = Training.WorkoutRuntime.Current;
             if (w != null)
             {

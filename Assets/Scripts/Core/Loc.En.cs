@@ -903,6 +903,19 @@ namespace Jogging.Core
             ["Großer Feldberg (Taunus)"] = "Großer Feldberg (Taunus)",
             ["Feldberg (Schwarzwald)"] = "Feldberg (Black Forest)",
             ["Serie: 1 Tag – bis zu 2 Ruhetage am Stück sind erlaubt"] = "Streak: 1 day – up to 2 rest days in a row are fine",
+            ["{0} wartet auf dich"] = "{0} is waiting for you",
+            ["{0} läuft voraus"] = "{0} runs ahead",
+            ["{0} schnüffelt am Wegrand"] = "{0} is sniffing at the wayside",
+            ["{0} dreht eine Extrarunde"] = "{0} does an extra round",
+            ["Bello"] = "Buddy",
+            ["kein Hund"] = "no dog",
+            ["Deutscher Schäferhund"] = "German Shepherd",
+            ["Begleithund"] = "Companion dog",
+            ["Auf vier Pfoten"] = "On four paws",
+            ["ein Lauf mit deinem Hund"] = "a run with your dog",
+            ["Treue Pfoten"] = "Loyal paws",
+            ["50 km mit deinem Hund"] = "50 km with your dog",
+            ["Hund"] = "Dog",
         };
     }
 }

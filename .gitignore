@@ -50,6 +50,8 @@ Tools/WinBleBridge/obj/
 /[Aa]ssets/MapMagic.meta
 /[Aa]ssets/Idyllic Fantasy Nature/
 /[Aa]ssets/Idyllic Fantasy Nature.meta
+/[Aa]ssets/PhotoReal/Dogs/
+/[Aa]ssets/PhotoReal/Dogs.meta
 # seasonal tree textures, recoloured from the Asset Store trees by the build (Editor/SeasonBuilder)
 /[Aa]ssets/PhotoReal/Seasons/*.png
 /[Aa]ssets/PhotoReal/Seasons/*.png.meta

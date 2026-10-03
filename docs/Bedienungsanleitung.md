@@ -104,6 +104,13 @@ gehen nicht (iPad, Mac und die meisten Tablets haben kein ANT+). Meldet der Gurt
 oder als eigener Pulsdienst, FitShow-Bänder in ihrer Statusmeldung), zeigt die App ihn mit „(Hand)“ an –
 aber nur, solange kein Gurt liefert; der Gurt ist genauer und misst auch ohne Hände an den Griffen.
 
+**Begleithund** (im **Profil**): Wähle „Deutscher Schäferhund“ und gib ihm einen Namen – er läuft dann bei jedem
+Lauf mit, wie ein echter Hund: meist bei Fuß (mal links, mal rechts), manchmal läuft er voraus und wartet mit Blick
+zurück, bleibt schnüffelnd am Wegrand stehen und holt im Galopp auf, oder dreht eine Extrarunde über die Wiese.
+Er weicht dir und den Mitläufern immer aus und ist nach spätestens einer Dreiviertelminute wieder bei dir; hältst
+du an, kommt er zu dir und wartet. Zwei Erfolge gehören ihm („Auf vier Pfoten“, „Treue Pfoten“ für 50 km).
+(Wer die App selbst aus dem Quellcode baut, braucht dafür das kostenlose Modell von Fab, siehe docs/Setup.md.)
+
 **Pulscoach und Steigung nach Puls** (im **Profil**): Der Pulscoach sagt Bescheid, wenn dein Puls länger als 20 s
 außerhalb der Zielzone liegt – nur in Workouts mit Pulszonen, oder immer mit einer Zielzone, die du wählst.
 Mit **Steigung nach Puls** regelt die App stattdessen selbst nach: Liegt der Puls 30 s über der Zielzone, nimmt
@@ -159,7 +166,7 @@ der F37; die anderen folgen den veröffentlichten Protokollen.
   nach der Erlaubnis. „Alle Läufe an Health senden“ trägt auch ältere Läufe nach; schon gesendete werden ersetzt,
   nicht doppelt eingetragen. Die App liest nichts aus Health. Health gibt die Läufe nicht an Strava oder Garmin
   weiter – dafür bleibt der TCX-Export.
-- **Verlauf (12 Wochen)** als Balken, **Erfolge** (24 Stück).
+- **Verlauf (12 Wochen)** als Balken, **Erfolge** (26 Stück).
 
 ## 6a. Abenteuer
 

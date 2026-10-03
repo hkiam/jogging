@@ -104,7 +104,8 @@ namespace Jogging.UI
                     Jogging.Core.Loc.F("Distanz     {0}\n", Jogging.Core.Units.FmtDist(dist, "0.00")) +
                     Jogging.Core.Loc.F("Zeit          {0:00}:{1:00}\n", m, s) +
                     Jogging.Core.Loc.F("Höhenmeter  +{0}\n", Jogging.Core.Units.FmtElev(gain)) +
-                    Jogging.Core.Loc.F("Ø Tempo     {0}   ·   {1}", Jogging.Core.Units.FmtSpeed(kmh), RunnerStats.Pace(dist, secs)) + pulse + record + unlocked;
+                    Jogging.Core.Loc.F("Ø Tempo     {0}\n{1}", Jogging.Core.Units.FmtSpeed(kmh), RunnerStats.Pace(dist, secs)) + pulse;
+            if (details != null) details.text = (record + unlocked).TrimStart('\n');
 
             if (exportRun != null) // a run too short to count is not in the logbook – nothing to export
             {
@@ -209,7 +210,7 @@ namespace Jogging.UI
             prt.anchorMin = prt.anchorMax = new Vector2(0.5f, 0.5f);
             prt.pivot = new Vector2(0.5f, 0.5f);
             prt.anchoredPosition = Vector2.zero;
-            prt.sizeDelta = new Vector2(660f, 700f);
+            prt.sizeDelta = new Vector2(1120f, 680f); // two columns: the run left, what it brought right
 
             // Accent header bar.
             var header = UiTheme.Panel(panel.transform, UiTheme.Success);
@@ -222,9 +223,18 @@ namespace Jogging.UI
 
             summary = UiTheme.Label(panel.transform, "", 26, UiTheme.TextPrimary, TextAnchor.UpperLeft);
             var srt = summary.GetComponent<RectTransform>();
-            srt.anchorMin = new Vector2(0f, 0f); srt.anchorMax = new Vector2(1f, 1f);
-            srt.offsetMin = new Vector2(48f, 200f); srt.offsetMax = new Vector2(-48f, -110f);
-            summary.resizeTextForBestFit = true; summary.resizeTextMinSize = 15; summary.resizeTextMaxSize = 26; // long runs say a lot
+            srt.anchorMin = new Vector2(0f, 0f); srt.anchorMax = new Vector2(0.42f, 1f);
+            srt.offsetMin = new Vector2(48f, 200f); srt.offsetMax = new Vector2(-16f, -110f);
+            details = UiTheme.Label(panel.transform, "", 20, UiTheme.TextPrimary, TextAnchor.UpperLeft);
+            var drt = details.GetComponent<RectTransform>();
+            drt.anchorMin = new Vector2(0.42f, 0f); drt.anchorMax = new Vector2(1f, 1f);
+            drt.offsetMin = new Vector2(16f, 200f); drt.offsetMax = new Vector2(-40f, -110f);
+            // long runs say a lot: smaller type when needed, and never across the buttons
+            foreach (var t in new[] { summary, details })
+            {
+                t.resizeTextForBestFit = true; t.resizeTextMinSize = 13; t.resizeTextMaxSize = t == summary ? 26 : 21;
+                t.horizontalOverflow = HorizontalWrapMode.Wrap; t.verticalOverflow = VerticalWrapMode.Truncate;
+            }
 
             // A free run through a new landscape can be kept as a route (same seed = same landscape).
             saveRoute = UiTheme.Button(panel.transform, "Strecke speichern", SaveRoute, UiTheme.Success, 20);
@@ -261,6 +271,7 @@ namespace Jogging.UI
             overlay.SetActive(false);
         }
 
+        private Text details;
         private Button exportRun;
         private Text exportLabel;
 

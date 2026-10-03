@@ -130,12 +130,18 @@ namespace Jogging.UI
             }
 
             // 2. Quick Run on the simulated F37
+            // the companion dog runs along (when its model is in this build – not in the public repository)
+            bool dogModel = DogCompanion.Available("germanshepherd");
+            if (dogModel) { PS.Profile.dog = "germanshepherd"; PS.Profile.dogName = "Rex"; PS.SaveActive(false); }
             var quick = RoutePresets.NewFreeRun();
             quick.@params.weather = "clear";
             quick.@params.spectators = "many"; // enough figures for the twin check below
             yield return StartRun(quick);
             yield return Until(() => FindFirstObjectByType<RunStats>().DistanceMeters > 400f, 90f, "Quick Run: 400 m gelaufen");
             Check(Mathf.Abs(Belt.SpeedKmh - 8f) < 0.2f, $"Band-Tempo bleibt beim Läufer ({Belt.SpeedKmh:0.0} km/h)");
+            if (dogModel)
+                Check(DogCompanion.Current != null && Mathf.Abs(DogCompanion.Current.Gap) < 60f, $"Hund läuft mit ({(DogCompanion.Current != null ? $"{DogCompanion.Current.Gap:0} m, {DogCompanion.Current.State}" : "fehlt")})");
+            else Debug.Log("[E2E] Hund-Modell nicht in diesem Build – übersprungen");
             string me = FindFirstObjectByType<RealPlayerFigure>().ChosenName;
             int twins = 0, figures = 0; // every figure but yours (and the ghost's): runners, rival, spectators
             foreach (var a in FindObjectsByType<Animator>(FindObjectsSortMode.None))

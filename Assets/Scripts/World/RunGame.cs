@@ -40,6 +40,7 @@ namespace Jogging.World
             names = new Dictionary<string, string>();
             var ps = ProfileService.Instance;
             if (ps != null) foreach (var r in ps.Runners) { family[r.id] = ps.SummariesOf(r.id); names[r.id] = r.playerName; }
+            DogCompanion.ForActiveRunner(); // the profile is loaded by now (on the route's build it may not be yet)
             if (climbs.Count > 0) Debug.Log($"[Spiel] {climbs.Count} Bergwertungen: " + string.Join(", ", climbs.ConvertAll(c => $"{c.startM:0}–{c.endM:0} m ↑{c.gainM:0}")));
         }
 

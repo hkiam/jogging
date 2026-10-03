@@ -25,7 +25,7 @@ Statistik und Erfolgen.
 | Laufband | Sportstech F37 (FitShow über BLE-Bridge), Standard-FTMS; eine Sicherheitsschicht für alle Befehle ans Band, Grenzen je Band (Profil); nur lesend: iConsole+, LifeSpan, KingSmith WalkingPad, Laufsensoren (RSC) |
 | Puls | jeder Bluetooth-Pulsmesser (Heart Rate), Handsensoren am Band (FTMS, FitShow, Pulsdienst des Bands) |
 | Pulsgurt | Standard-Herzfrequenzsensor über dieselbe Bridge, pro Läufer gekoppelt |
-| Auswertung | Logbuch mit 1-Hz-Messpunkten, Statistik, 12-Wochen-Verlauf, 24 Erfolge, Wochenziele, TCX-Export |
+| Auswertung | Logbuch mit 1-Hz-Messpunkten, Statistik, 12-Wochen-Verlauf, 26 Erfolge, Wochenziele, TCX-Export |
 | Daten | Absturzsicheres Speichern (`.bak`), Datensicherung als ZIP |
 
 ## Technik
@@ -168,6 +168,8 @@ Windows-Rechner getestet.**
 | `-waysideshots <ordner> -beltsim -timescale 6` | Testbilder des Wegrands: läuft die Strecke und fotografiert je Objektart das erste Vorkommen |
 | `-animaltest` | je ein Hase, Kaninchen, Fuchs und zwei Hirsche gleich am Start; mit `-skyshots` zusätzlich Nahaufnahmen `tier-*.png` |
 | `-pageshots <ordner> [-pages stats,export,import,gpxeditor,profile,…]` | Bilder der Menüseiten (Standard: main, editor, settings, profile), danach beendet sich die App; `gpxeditor` öffnet die erste GPX-Datei aus Downloads im Editor |
+| `-dog <rasse> [name]` | Begleithund für diesen Start (z. B. `-dog germanshepherd Rex`) |
+| `-dogshots <ordner> -beltsim -dog germanshepherd` | Testbilder des Hundes: eine Minute laufen, alle 3 s ein Bild (abwechselnd von hinten und von der Seite), am Ende der Zielbildschirm |
 | `-nowayside` | ohne Wegrand-Objekte (Vergleich der Bildrate) |
 | `-skyshots <ordner>` | Testbilder des Himmels (15 Stimmungen × 2 Blickrichtungen), danach beendet sich die App |
 | `-fps` | nur die Bildrate im Log (`[FPS] Ø … · 1% low …`) |

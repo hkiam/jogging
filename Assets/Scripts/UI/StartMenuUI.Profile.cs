@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Jogging.Profile;
@@ -17,7 +18,7 @@ namespace Jogging.UI
         private void ShowProfile()
         {
             const float w = 1000f;
-            var p = NewPage(w, 1056f);
+            var p = NewPage(w, 1040f);
             SetDim(RunnerDim);
             var ps = ProfileService.Instance;
             if (ps == null || !ps.HasRunners) { ShowEntry(); return; }
@@ -92,12 +93,23 @@ namespace Jogging.UI
             UiControls.Label(p, "hält dich in der Zielzone: die App stellt die Steigung nach (wenn sie die Steigung stellt)", 16, 720f, -772f, w - 770f, 48f, UiTheme.TextMuted).horizontalOverflow = HorizontalWrapMode.Wrap;
             UiControls.Label(p, "sagt Bescheid, wenn der Puls länger aus der Zielzone ist", 16, 720f, -716f, w - 770f, 44f, UiTheme.TextMuted).horizontalOverflow = HorizontalWrapMode.Wrap;
 
+            // Companion dog (only breeds whose model is in this build; World/DogCompanion)
+            var breeds = new List<(string id, string name)> { ("", "kein Hund") };
+            foreach (var b in Jogging.World.DogCompanion.Breeds) if (Jogging.World.DogCompanion.Available(b.id)) breeds.Add(b);
+            string dog = breeds.Exists(b => b.id == me.dog) ? me.dog : "";
+            InputField dogName = null;
+            if (breeds.Count > 1)
+            {
+                Cycle(p, "Begleithund", breeds.ConvertAll(b => b.id).ToArray(), breeds.ConvertAll(b => b.name).ToArray(), dog, v => dog = v, 50f, -830f, 640f);
+                dogName = UiControls.TextField(p, string.IsNullOrWhiteSpace(me.dogName) ? Jogging.Core.Loc.T("Bello") : me.dogName, 720f, -830f, w - 770f);
+            }
+
             // The runner's own heart rate strap (paired on first connect; "Anderer Gurt" takes the next free one)
-            UiControls.Label(p, "Pulsgurt", 20, 50f, -830f, 210f, 44f, UiTheme.TextMuted);
+            UiControls.Label(p, "Pulsgurt", 20, 50f, -886f, 210f, 44f, UiTheme.TextMuted);
             UiControls.Label(p, string.IsNullOrEmpty(me.hrDeviceName) && string.IsNullOrEmpty(me.hrDeviceId) ? "noch keiner – der erste, der sich verbindet"
-                               : (string.IsNullOrEmpty(me.hrDeviceName) ? "Pulsgurt" : me.hrDeviceName), 20, 260f, -830f, 400f, 44f, UiTheme.TextPrimary);
+                               : (string.IsNullOrEmpty(me.hrDeviceName) ? "Pulsgurt" : me.hrDeviceName), 20, 260f, -886f, 400f, 44f, UiTheme.TextPrimary);
             UiControls.Button(p, Jogging.Core.Loc.T("Anderer Gurt"), () => { PairOtherStrap(FindFirstObjectByType<Jogging.Locomotion.Treadmill.MacBleBridgeTransport>()); ShowProfile(); },
-                                 w - 290f, -828f, 240f, 44f, null, 19);
+                                 w - 290f, -884f, 240f, 44f, null, 19);
 
             UiControls.Button(p, "Speichern", () =>
             {
@@ -111,10 +123,13 @@ namespace Jogging.UI
                 me.ghostOff = !ghostOn;
                 me.pulseCoach = coach;
                 me.pulseIncline = pulseIncline;
+                me.dog = dog;
+                if (dogName != null) me.dogName = string.IsNullOrWhiteSpace(dogName.text) ? "" : dogName.text.Trim();
                 ps.SaveActive(figChanged);
+                Jogging.World.DogCompanion.ForActiveRunner(); // on, off, other name: right away
                 ShowHome();
-            }, 50f, -902f, 300f, 60f, UiTheme.Success, 24);
-            UiControls.Button(p, Jogging.Core.Loc.T("Abbrechen"), () => { if (player != null) player.Show(me.figureModel); ShowHome(); }, 370f, -902f, 260f, 60f);
+            }, 50f, -950f, 300f, 60f, UiTheme.Success, 24);
+            UiControls.Button(p, Jogging.Core.Loc.T("Abbrechen"), () => { if (player != null) player.Show(me.figureModel); ShowHome(); }, 370f, -950f, 260f, 60f);
 
             // Delete (second click confirms)
             Text del = null;
@@ -124,7 +139,7 @@ namespace Jogging.UI
                 if (!armed) { armed = true; del.text = Jogging.Core.Loc.F("Wirklich {0} mit allen Läufen löschen?", me.playerName); return; }
                 ps.DeleteRunner(me.id);
                 ShowEntry();
-            }, 50f, -978f, w - 100f, 52f, UiTheme.Danger, 20).GetComponentInChildren<Text>();
+            }, 650f, -954f, w - 700f, 52f, UiTheme.Danger, 16).GetComponentInChildren<Text>();
         }
     }
 }

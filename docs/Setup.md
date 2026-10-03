@@ -49,6 +49,20 @@ textures (spring, autumn, winter) are recoloured from these trees by the first b
 **That's all you need** – the app builds and runs with the unmodified packages (checked: the full
 end-to-end test passes, 111 of 111). In the log it says once *"MapMagic ohne die Anpassungen der App"*.
 
+## 2b. Optional: the companion dog
+
+The runner's dog (Profil → Begleithund) is the free "German Shepherd 3D Dog Model" by RetroStyle Games on Fab
+(<https://www.fab.com/listings/5ffcabde-3356-4d75-b98e-580825f15e47>). Its licence doesn't allow sharing the
+files, so it isn't in this repository; without it the app just has no dog. To add it: download the FBX zip on
+Fab, then
+
+```bash
+Tools/dogs/import-germanshepherd.sh ~/Downloads/rsg_dogspack_germanshepherd_fbx.zip
+```
+
+and in Unity **Jogging → Build → Hunde aufbereiten** (in-place clips, URP material, real size, prefab in
+`Assets/PhotoReal/Dogs/Resources/Dogs/`).
+
 ## 3. Optional: the app's changes inside MapMagic
 
 The original project runs MapMagic with a few changes that make it faster and smoother, especially on

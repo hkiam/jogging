@@ -70,6 +70,12 @@ namespace Jogging.World
             public Vector3 pos; // logical: x = lane, z = metres ahead of the player (along the trail)
         }
 
+        /// <summary>Where the fellow runners are: (metres ahead of the player along the trail, sideways) – the dog keeps clear.</summary>
+        public void Positions(List<Vector2> into)
+        {
+            foreach (var r in runners) if (r.root != null && r.root.gameObject.activeInHierarchy) into.Add(new Vector2(r.pos.z, r.pos.x));
+        }
+
         private static readonly int SpeedId = Animator.StringToHash("Speed");
         private readonly List<Runner> runners = new List<Runner>();
         private ILocomotionSource loco;

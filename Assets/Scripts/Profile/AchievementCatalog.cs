@@ -43,6 +43,13 @@ namespace Jogging.Profile
             return s;
         }
 
+        private static float DogKm(AchievementContext c)
+        {
+            float m = 0f;
+            foreach (var r in c.Runs) if (!string.IsNullOrEmpty(r.dog)) m += r.distanceM;
+            return m / 1000f;
+        }
+
         private static int Count(AchievementContext c, Func<SessionSummary, bool> f)
         {
             int n = 0;
@@ -82,6 +89,8 @@ namespace Jogging.Profile
             new("Training","workout-10", "10 Workouts",      "10 Workouts vollständig",              c => Count(c, r => r.workoutCompleted) >= 10),
             new("Training","belt-1",     "Aufs Band!",       "ein Lauf auf dem Laufband",            c => Count(c, r => r.source == "belt") >= 1),
             new("Training","zone2-20",   "Grundlage",        "20 min in Zone 2 in einem Lauf",       c => MaxZoneSeconds(c, 2) >= 1200f),
+            new("Hund",    "dog-1",      "Auf vier Pfoten",  "ein Lauf mit deinem Hund",             c => Count(c, r => !string.IsNullOrEmpty(r.dog)) >= 1),
+            new("Hund",    "dog-50",     "Treue Pfoten",     "50 km mit deinem Hund",                c => DogKm(c) >= 50f),
             new("Training","plan-1",     "Planerfüller",     "einen Trainingsplan ganz durchlaufen", c => c.Profile.plansFinished.Count >= 1),
             new("Training","route-1",    "Streckenbauer",    "eine eigene Strecke komplett laufen",  c => Count(c, r => r.completed && !string.IsNullOrEmpty(r.routeId)) >= 1),
         };

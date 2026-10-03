@@ -54,6 +54,7 @@ namespace Jogging.World
             if (wayside) Animals.MakePlan(doc, path); // deer, hares, rabbits, a fox – after the wayside (they keep off it)
             if (wayside && FindFirstObjectByType<Animals>() == null) new GameObject("Tiere").AddComponent<Animals>();
             if (FindFirstObjectByType<RunGame>() == null) new GameObject("Spiel").AddComponent<RunGame>(); // climb segments, album moods
+            DogCompanion.ForActiveRunner(); // the runner's dog, if any
             if (shaper != null) shaper.SetRoute(doc.profile.heightsM, doc.profile.stepM, loop, path.Length);
             Sky.Begin(p, doc.generator.seed);
             var look = FindFirstObjectByType<TerrainLook>();

@@ -19,13 +19,15 @@ left out).
 
 ## Not included – get them yourself
 
-These come from the Unity Asset Store. Their licence (the Asset Store EULA) doesn't allow redistributing
-them, so they are **not** in this repository. See [docs/Setup.md](docs/Setup.md) for how to add them.
+These come from the Unity Asset Store and Fab. Their licences (Asset Store EULA, Fab Standard License) don't
+allow redistributing them, so they are **not** in this repository. Without the dog the app simply offers no
+companion dog. See [docs/Setup.md](docs/Setup.md) for how to add them.
 
 | What | Where it goes | Source |
 |---|---|---|
 | **MapMagic 2** (v2.1.20, by Denis Pahunov) – the infinite terrain generator | `Assets/MapMagic/` | Unity Asset Store, product 165180 |
 | **Idyllic Fantasy Nature** (v1.0, by Edenity) – trees, bushes, plants, rocks, terrain layers | `Assets/Idyllic Fantasy Nature/` | Unity Asset Store, product 260042 |
+| **German Shepherd 3D Dog Model** (by RetroStyle Games) – the optional companion dog. Free, but under the Fab Standard License (no redistribution of the files) | `Assets/PhotoReal/Dogs/germanshepherd/` (`Tools/dogs/import-germanshepherd.sh`) | Fab, free listing 5ffcabde-3356-4d75-b98e-580825f15e47 |
 
 The project also uses Unity packages (Universal Render Pipeline, Input System, …) that Unity resolves
 from `Packages/manifest.json` under the Unity Companion License.

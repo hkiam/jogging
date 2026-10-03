@@ -28,6 +28,7 @@ trap 'rm -rf "$TMP"' EXIT
 git ls-files -z -- . \
   ':!Assets/MapMagic' ':!Assets/MapMagic.meta' \
   ':!Assets/Idyllic Fantasy Nature' ':!Assets/Idyllic Fantasy Nature.meta' \
+  ':!Assets/PhotoReal/Dogs' ':!Assets/PhotoReal/Dogs.meta' \
   ':!Jogging.slnx' \
   ':!Assets/PhotoReal/Seasons/*.png' ':!Assets/PhotoReal/Seasons/*.png.meta' \
   | xargs -0 tar -cf - | (cd "$TMP" && tar -xf -)
@@ -40,6 +41,8 @@ cat >> "$TMP/.gitignore" <<'EOF'
 /[Aa]ssets/MapMagic.meta
 /[Aa]ssets/Idyllic Fantasy Nature/
 /[Aa]ssets/Idyllic Fantasy Nature.meta
+/[Aa]ssets/PhotoReal/Dogs/
+/[Aa]ssets/PhotoReal/Dogs.meta
 # seasonal tree textures, recoloured from the Asset Store trees by the build (Editor/SeasonBuilder)
 /[Aa]ssets/PhotoReal/Seasons/*.png
 /[Aa]ssets/PhotoReal/Seasons/*.png.meta
